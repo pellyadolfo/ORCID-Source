@@ -46,6 +46,7 @@ the software.
         <module>orcid-api-common</module>
         <module>orcid-pub-web</module>
         <module>orcid-api-web</module>
+		<module>orcid-api-walkthrough</module>
         <module>orcid-scheduler-web</module>
         <module>orcid-utils</module>
         <module>orcid-test</module>
