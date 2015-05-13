@@ -18,13 +18,16 @@ package org.orcid.api.common.jaxb;
 
 import static org.orcid.core.api.OrcidApiConstants.ORCID_JSON;
 import static org.orcid.core.api.OrcidApiConstants.VND_ORCID_JSON;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.jaxrs.cfg.Annotations;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 /**
@@ -40,19 +43,16 @@ public class OrcidJacksonJaxbJsonProvider extends JacksonJaxbJsonProvider {
         configureAll();
     }
 
-    public OrcidJacksonJaxbJsonProvider(Annotations... annotationsToUse) {
-        super(annotationsToUse);
-        configureAll();
-    }
-
-    public OrcidJacksonJaxbJsonProvider(ObjectMapper mapper, Annotations[] annotationsToUse) {
-        super(mapper, annotationsToUse);
-        configureAll();
-    }
-    
-    private void configureAll() {
+    protected void configureAll() {
         configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         configure(SerializationFeature.INDENT_OUTPUT, true);
     }
 
+    @Override
+    public ObjectMapper locateMapper(Class<?> type, MediaType mediaType) {
+        ObjectMapper objectMapper = super.locateMapper(type, mediaType);
+        objectMapper.setSerializationInclusion(Include.NON_NULL);
+        return objectMapper;
+    }
+    
 }
