@@ -26,8 +26,10 @@ import org.orcid.persistence.jpa.entities.SourceEntity;
  */
 public interface OrcidSecurityManager {
 
-    void checkVisibility(Filterable filterable);        
-    
+    void checkVisibility(Filterable filterable);
+
     void checkSource(SourceEntity existingSource);
-    
+
+    boolean isAdmin();
+
 }

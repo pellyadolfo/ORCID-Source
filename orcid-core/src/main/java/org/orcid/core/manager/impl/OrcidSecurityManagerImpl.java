@@ -28,8 +28,10 @@ import org.orcid.core.exception.OrcidUnauthorizedException;
 import org.orcid.core.exception.WrongSourceException;
 import org.orcid.core.manager.OrcidSecurityManager;
 import org.orcid.core.manager.SourceManager;
+import org.orcid.core.oauth.OrcidProfileUserDetails;
 import org.orcid.jaxb.model.common.Filterable;
 import org.orcid.jaxb.model.common.Visibility;
+import org.orcid.jaxb.model.message.OrcidType;
 import org.orcid.jaxb.model.message.ScopePathType;
 import org.orcid.jaxb.model.record.Education;
 import org.orcid.jaxb.model.record.Employment;
@@ -98,6 +100,20 @@ public class OrcidSecurityManagerImpl implements OrcidSecurityManager {
         if (sourceIdOfUpdater != null && (existingSource == null || !sourceIdOfUpdater.equals(existingSource.getSourceId()))) {
             throw new WrongSourceException("You are not the source of the work, so you are not allowed to update it");
         }
+    }
+
+    @Override
+    public boolean isAdmin() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof OrcidProfileUserDetails) {
+                OrcidProfileUserDetails userDetails = (OrcidProfileUserDetails) principal;
+                return OrcidType.ADMIN.equals(userDetails.getOrcidType());
+            }
+        }
+        return false;
     }
 
     private Set<String> getReadLimitedScopesThatTheClientHas(OAuth2Request authorizationRequest, Filterable filterable) {
