@@ -59,193 +59,193 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlRootElement(name = "email")
 public class Email implements Serializable, VisibilityType {
 
-    private final static long serialVersionUID = 1L;
-    @XmlValue
-    protected String value;
-    @XmlAttribute
-    protected Boolean primary;
-    @XmlAttribute
-    protected Boolean current;
-    @XmlAttribute
-    protected Boolean verified;
-    @XmlAttribute
-    protected Visibility visibility;
-    @XmlAttribute
-    protected String source;
-    @XmlAttribute(name = "source-client-id")
-    protected String sourceClientId;
+	private final static long serialVersionUID = 1L;
+	@XmlValue
+	protected String value;
+	@XmlAttribute
+	protected Boolean primary;
+	@XmlAttribute
+	protected Boolean current;
+	@XmlAttribute
+	protected Boolean verified;
+	@XmlAttribute
+	protected Visibility visibility;
+	@XmlAttribute
+	protected String source;
+	@XmlAttribute(name = "source-client-id")
+	protected String sourceClientId;
 
-    public Email() {
-        super();
-    }
+	public Email() {
+		super();
+	}
 
-    public Email(String value) {
-        super();
-        this.value = value;
-    }
+	public Email(String value) {
+		super();
+		this.value = value;
+	}
 
-    /**
-     * Gets the value of the value property.
-     * 
-     * @return possible object is {@link String }
-     * 
-     */
-    public String getValue() {
-        return value;
-    }
+	/**
+	 * Gets the value of the value property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    /**
-     * Sets the value of the value property.
-     * 
-     * @param value
-     *            allowed object is {@link String }
-     * 
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+	/**
+	 * Sets the value of the value property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link String }
+	 * 
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    /**
-     * Gets the value of the primary property.
-     * 
-     * @return possible object is {@link Boolean }
-     * 
-     */
-    public boolean isPrimary() {
-        if (primary == null) {
-            return true;
-        } else {
-            return primary;
-        }
-    }
+	/**
+	 * Gets the value of the primary property.
+	 * 
+	 * @return possible object is {@link Boolean }
+	 * 
+	 */
+	public boolean isPrimary() {
+		if (primary == null) {
+			return false;
+		} else {
+			return primary;
+		}
+	}
 
-    /**
-     * Sets the value of the primary property.
-     * 
-     * @param value
-     *            allowed object is {@link Boolean }
-     * 
-     */
-    public void setPrimary(Boolean value) {
-        this.primary = value;
-    }
+	/**
+	 * Sets the value of the primary property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Boolean }
+	 * 
+	 */
+	public void setPrimary(Boolean value) {
+		this.primary = value;
+	}
 
-    /**
-     * Gets the value of the current property.
-     * 
-     * @return possible object is {@link Boolean }
-     * 
-     */
-    public boolean isCurrent() {
-        if (current == null) {
-            return true;
-        } else {
-            return current;
-        }
-    }
+	/**
+	 * Gets the value of the current property.
+	 * 
+	 * @return possible object is {@link Boolean }
+	 * 
+	 */
+	public boolean isCurrent() {
+		if (current == null) {
+			return true;
+		} else {
+			return current;
+		}
+	}
 
-    /**
-     * Sets the value of the current property.
-     * 
-     * @param value
-     *            allowed object is {@link Boolean }
-     * 
-     */
-    public void setCurrent(Boolean value) {
-        this.current = value;
-    }
+	/**
+	 * Sets the value of the current property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Boolean }
+	 * 
+	 */
+	public void setCurrent(Boolean value) {
+		this.current = value;
+	}
 
-    /**
-     * Gets the value of the verified property.
-     * 
-     * @return possible object is {@link Boolean }
-     * 
-     */
-    public boolean isVerified() {
-        if (verified == null) {
-            return false;
-        } else {
-            return verified;
-        }
-    }
+	/**
+	 * Gets the value of the verified property.
+	 * 
+	 * @return possible object is {@link Boolean }
+	 * 
+	 */
+	public boolean isVerified() {
+		if (verified == null) {
+			return false;
+		} else {
+			return verified;
+		}
+	}
 
-    /**
-     * Sets the value of the verified property.
-     * 
-     * @param value
-     *            allowed object is {@link Boolean }
-     * 
-     */
-    public void setVerified(Boolean value) {
-        this.verified = value;
-    }
+	/**
+	 * Sets the value of the verified property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Boolean }
+	 * 
+	 */
+	public void setVerified(Boolean value) {
+		this.verified = value;
+	}
 
-    /**
-     * Gets the value of the visibility property.
-     * 
-     * @return possible object is {@link Visibility }
-     * 
-     */
-    public Visibility getVisibility() {
-        return visibility;
-    }
+	/**
+	 * Gets the value of the visibility property.
+	 * 
+	 * @return possible object is {@link Visibility }
+	 * 
+	 */
+	public Visibility getVisibility() {
+		return visibility;
+	}
 
-    /**
-     * Sets the value of the visibility property.
-     * 
-     * @param value
-     *            allowed object is {@link Visibility }
-     * 
-     */
-    public void setVisibility(Visibility value) {
-        this.visibility = value;
-    }
+	/**
+	 * Sets the value of the visibility property.
+	 * 
+	 * @param value
+	 *            allowed object is {@link Visibility }
+	 * 
+	 */
+	public void setVisibility(Visibility value) {
+		this.visibility = value;
+	}
 
-    public String getSource() {
-        return source;
-    }
+	public String getSource() {
+		return source;
+	}
 
-    public void setSource(String source) {
-        this.source = source;
-    }
+	public void setSource(String source) {
+		this.source = source;
+	}
 
-    public String getSourceClientId() {
-        return sourceClientId;
-    }
+	public String getSourceClientId() {
+		return sourceClientId;
+	}
 
-    public void setSourceClientId(String sourceClientId) {
-        this.sourceClientId = sourceClientId;
-    }
+	public void setSourceClientId(String sourceClientId) {
+		this.sourceClientId = sourceClientId;
+	}
 
-    /**
-     * Note that hashCode and equals only use the value of the address
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
-    }
+	/**
+	 * Note that hashCode and equals only use the value of the address
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
 
-    /**
-     * Note that hashCode and equals only use the value of the address
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Email other = (Email) obj;
-        if (value == null) {
-            if (other.value != null)
-                return false;
-        } else if (!value.equals(other.value))
-            return false;
-        return true;
-    }
+	/**
+	 * Note that hashCode and equals only use the value of the address
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Email other = (Email) obj;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
 
 }

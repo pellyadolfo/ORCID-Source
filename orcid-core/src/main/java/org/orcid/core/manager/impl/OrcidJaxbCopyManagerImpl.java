@@ -76,414 +76,514 @@ import org.springframework.util.Assert;
 
 public class OrcidJaxbCopyManagerImpl implements OrcidJaxbCopyManager {
 
-    @Resource
-    private SourceManager sourceManager;
+	@Resource
+	private SourceManager sourceManager;
 
-    @Override
-    public void copyRelevantUpdatedHistoryElements(OrcidHistory existing, OrcidHistory updated) {
-        Assert.notNull(updated, "The updated history is null");
-        Assert.notNull(existing, "The existing history is null");
+	@Override
+	public void copyRelevantUpdatedHistoryElements(OrcidHistory existing,
+			OrcidHistory updated) {
+		Assert.notNull(updated, "The updated history is null");
+		Assert.notNull(existing, "The existing history is null");
 
-        if (updated.isClaimed() && !existing.isClaimed()) {
-            existing.setClaimed(new Claimed(true));
-        }
+		if (updated.isClaimed() && !existing.isClaimed()) {
+			existing.setClaimed(new Claimed(true));
+		}
 
-        if (existing.getCompletionDate() == null && updated.getCompletionDate() != null) {
-            existing.setCompletionDate(updated.getCompletionDate());
-        }
-        // TODO: There may be some others that need to be added to this.
-    }
+		if (existing.getCompletionDate() == null
+				&& updated.getCompletionDate() != null) {
+			existing.setCompletionDate(updated.getCompletionDate());
+		}
+		// TODO: There may be some others that need to be added to this.
+	}
 
-    @Override
-    public void copyUpdatedBioToExistingWithVisibility(OrcidBio existing, OrcidBio updated) {
-        Assert.notNull(updated, "The updated bio is null");
-        Assert.notNull(existing, "The existing bio is null");
+	@Override
+	public void copyUpdatedBioToExistingWithVisibility(OrcidBio existing,
+			OrcidBio updated) {
+		Assert.notNull(updated, "The updated bio is null");
+		Assert.notNull(existing, "The existing bio is null");
 
-        copyUpdatedPersonalDetailsToExistingPreservingVisibility(existing, updated);
-        copyUpdatedResearcherUrlPreservingVisbility(existing, updated);
-        copyUpdatedContactDetailsToExistingPreservingVisibility(existing, updated);
-        copyUpdatedKeywordsToExistingPreservingVisibility(existing, updated);
-        copyUpdatedShortDescriptionToExistingPreservingVisibility(existing, updated);
-        copyUpdatedExternalIdentifiersToExistingPreservingVisibility(existing, updated);
-    }
+		copyUpdatedPersonalDetailsToExistingPreservingVisibility(existing,
+				updated);
+		copyUpdatedResearcherUrlPreservingVisbility(existing, updated);
+		copyUpdatedContactDetailsToExistingPreservingVisibility(existing,
+				updated);
+		copyUpdatedKeywordsToExistingPreservingVisibility(existing, updated);
+		copyUpdatedShortDescriptionToExistingPreservingVisibility(existing,
+				updated);
+		copyUpdatedExternalIdentifiersToExistingPreservingVisibility(existing,
+				updated);
+	}
 
-    @Override
-    public void copyAffiliationsToExistingPreservingVisibility(Affiliations existingAffiliations, Affiliations updatedAffiliations) {
-        copyActivitiesToExistingPreservingVisibility(existingAffiliations, updatedAffiliations, OrcidVisibilityDefaults.AFFILIATE_NAME_DEFAULT.getVisibility());
-    }
+	@Override
+	public void copyAffiliationsToExistingPreservingVisibility(
+			Affiliations existingAffiliations, Affiliations updatedAffiliations) {
+		copyActivitiesToExistingPreservingVisibility(existingAffiliations,
+				updatedAffiliations,
+				OrcidVisibilityDefaults.AFFILIATE_NAME_DEFAULT.getVisibility());
+	}
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void copyActivitiesToExistingPreservingVisibility(ActivitiesContainer existingActivities, ActivitiesContainer updatedActivities, Visibility defaultVisibility) {
-        if (updatedActivities == null) {
-            return;
-        }
-        if (existingActivities == null) {
-            try {
-                existingActivities = updatedActivities.getClass().newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void copyActivitiesToExistingPreservingVisibility(
+			ActivitiesContainer existingActivities,
+			ActivitiesContainer updatedActivities, Visibility defaultVisibility) {
+		if (updatedActivities == null) {
+			return;
+		}
+		if (existingActivities == null) {
+			try {
+				existingActivities = updatedActivities.getClass().newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 
-        Map<String, ? extends Activity> updatedActivitiesMap = updatedActivities.retrieveActivitiesAsMap();
-        Source targetSource = createSource(sourceManager.retrieveSourceOrcid());
-        for (Iterator<? extends Activity> existingActivitiesIterator = existingActivities.retrieveActivities().iterator(); existingActivitiesIterator.hasNext();) {
-            Activity existingActivity = existingActivitiesIterator.next();
-            Activity updatedActivity = updatedActivitiesMap.get(existingActivity.getPutCode());
-            if (updatedActivity == null) {
-                if (!(Visibility.PRIVATE.equals(existingActivity.getVisibility()) || isFromDifferentSource(existingActivity))) {
-                    // Remove existing activities unless they are private (we
-                    // need to keep those because the API user won't even know
-                    // they are there) or they are from another source
-                    existingActivitiesIterator.remove();
-                }
+		Map<String, ? extends Activity> updatedActivitiesMap = updatedActivities
+				.retrieveActivitiesAsMap();
+		Source targetSource = createSource(sourceManager.retrieveSourceOrcid());
+		for (Iterator<? extends Activity> existingActivitiesIterator = existingActivities
+				.retrieveActivities().iterator(); existingActivitiesIterator
+				.hasNext();) {
+			Activity existingActivity = existingActivitiesIterator.next();
+			Activity updatedActivity = updatedActivitiesMap
+					.get(existingActivity.getPutCode());
+			if (updatedActivity == null) {
+				if (!(Visibility.PRIVATE.equals(existingActivity
+						.getVisibility()) || isFromDifferentSource(existingActivity))) {
+					// Remove existing activities unless they are private (we
+					// need to keep those because the API user won't even know
+					// they are there) or they are from another source
+					existingActivitiesIterator.remove();
+				}
 
-            } else {
-                // Check the source of the existing activity is the same as
-                // the current source
-                checkSource(existingActivity);
-                if (updatedActivity.getVisibility() == null || !updatedActivity.getVisibility().equals(existingActivity.getVisibility())) {
-                    // Keep the visibility from the existing activity unless
-                    // was set by API user
-                    updatedActivity.setVisibility(existingActivity.getVisibility());
-                }
-                addSourceToActivity(updatedActivity, targetSource);
-                // Can remove existing object because will be replaced by
-                // incoming
-                existingActivitiesIterator.remove();
-            }
-        }
-        for (Activity updatedActivity : updatedActivities.retrieveActivities()) {
-            // Set default visibility for any remaining incoming affiliations
-            if (updatedActivity.getVisibility() == null) {
-                updatedActivity.setVisibility(defaultVisibility);
-            }
-            if (updatedActivity.getPutCode() == null) {
-                // Check source is correct for any newly added activities, if
-                // mentioned
-            	addSourceToActivity(updatedActivity, targetSource);
-            }
-        }
-        existingActivities.retrieveActivities().addAll((List) updatedActivities.retrieveActivities());
-    }
+			} else {
+				// Check the source of the existing activity is the same as
+				// the current source
+				checkSource(existingActivity);
+				if (updatedActivity.getVisibility() == null
+						|| !updatedActivity.getVisibility().equals(
+								existingActivity.getVisibility())) {
+					// Keep the visibility from the existing activity unless
+					// was set by API user
+					updatedActivity.setVisibility(existingActivity
+							.getVisibility());
+				}
+				addSourceToActivity(updatedActivity, targetSource);
+				// Can remove existing object because will be replaced by
+				// incoming
+				existingActivitiesIterator.remove();
+			}
+		}
+		for (Activity updatedActivity : updatedActivities.retrieveActivities()) {
+			// Set default visibility for any remaining incoming affiliations
+			if (updatedActivity.getVisibility() == null) {
+				updatedActivity.setVisibility(defaultVisibility);
+			}
+			if (updatedActivity.getPutCode() == null) {
+				// Check source is correct for any newly added activities, if
+				// mentioned
+				addSourceToActivity(updatedActivity, targetSource);
+			}
+		}
+		existingActivities.retrieveActivities().addAll(
+				(List) updatedActivities.retrieveActivities());
+	}
 
-    private void addSourceToActivity(Activity updatedActivity, Source targetSource) {
-		if(updatedActivity instanceof OrcidWork) {
+	private void addSourceToActivity(Activity updatedActivity,
+			Source targetSource) {
+		if (updatedActivity instanceof OrcidWork) {
 			((OrcidWork) updatedActivity).setSource(targetSource);
-		} else if(updatedActivity instanceof Funding) {
+		} else if (updatedActivity instanceof Funding) {
 			((Funding) updatedActivity).setSource(targetSource);
-		} else if(updatedActivity instanceof Affiliation) {
+		} else if (updatedActivity instanceof Affiliation) {
 			((Affiliation) updatedActivity).setSource(targetSource);
 		}
 	}
 
 	private void checkSource(Activity activity) {
-        if (isFromDifferentSource(activity)) {
-            throw new WrongSourceException();
-        }
+		if (isFromDifferentSource(activity)) {
+			throw new WrongSourceException();
+		}
 
-    }
-    
-    private Source createSource(String amenderOrcid) {
-        Source source = new Source();
-        if (OrcidStringUtils.isValidOrcid(amenderOrcid)) {
-            source.setSourceOrcid(new SourceOrcid(amenderOrcid));
-            source.setSourceClientId(null);
-        } else {
-            source.setSourceClientId(new SourceClientId(amenderOrcid));
-            source.setSourceOrcid(null);
-        }
-        return source;
-    }
+	}
 
-    private boolean isFromDifferentSource(Activity activity) {
-        String currentSource = sourceManager.retrieveSourceOrcid();
-        if (currentSource == null) {
-            // Not under Spring security so anything goes
-            return false;
-        }
-        return !currentSource.equals(activity.retrieveSourcePath());
-    }
+	private Source createSource(String amenderOrcid) {
+		Source source = new Source();
+		if (OrcidStringUtils.isValidOrcid(amenderOrcid)) {
+			source.setSourceOrcid(new SourceOrcid(amenderOrcid));
+			source.setSourceClientId(null);
+		} else {
+			source.setSourceClientId(new SourceClientId(amenderOrcid));
+			source.setSourceOrcid(null);
+		}
+		return source;
+	}
 
-    @Override
-    public void copyFundingListToExistingPreservingVisibility(FundingList existingFundings, FundingList updatedFundings) {
-        copyActivitiesToExistingPreservingVisibility(existingFundings, updatedFundings, OrcidVisibilityDefaults.FUNDING_DEFAULT.getVisibility());
-    }
+	private boolean isFromDifferentSource(Activity activity) {
+		String currentSource = sourceManager.retrieveSourceOrcid();
+		if (currentSource == null) {
+			// Not under Spring security so anything goes
+			return false;
+		}
+		return !currentSource.equals(activity.retrieveSourcePath());
+	}
 
-    @Override
-    public void copyUpdatedExternalIdentifiersToExistingPreservingVisibility(OrcidBio existing, OrcidBio updated) {
-        if (updated.getExternalIdentifiers() == null) {
-            return;
-        }
-        
-        ExternalIdentifiers existingExternalIdentifiers = existing.getExternalIdentifiers();
-        ExternalIdentifiers updatedExternalIdentifiers = updated.getExternalIdentifiers();
+	@Override
+	public void copyFundingListToExistingPreservingVisibility(
+			FundingList existingFundings, FundingList updatedFundings) {
+		copyActivitiesToExistingPreservingVisibility(existingFundings,
+				updatedFundings,
+				OrcidVisibilityDefaults.FUNDING_DEFAULT.getVisibility());
+	}
 
-        Visibility existingExternalIdentifiersVisibility = existingExternalIdentifiers != null ? existingExternalIdentifiers.getVisibility() : null;
-        Visibility updatedExternalIdentifiersVisibility = updatedExternalIdentifiers.getVisibility();
+	@Override
+	public void copyUpdatedExternalIdentifiersToExistingPreservingVisibility(
+			OrcidBio existing, OrcidBio updated) {
+		if (updated.getExternalIdentifiers() == null) {
+			return;
+		}
 
-        if (updatedExternalIdentifiersVisibility == null && existingExternalIdentifiersVisibility == null) {
-            updatedExternalIdentifiers.setVisibility(OrcidVisibilityDefaults.EXTERNAL_IDENTIFIER_DEFAULT.getVisibility());
-        } else if (updatedExternalIdentifiersVisibility == null && existingExternalIdentifiersVisibility != null) {
-            updatedExternalIdentifiers.setVisibility(existingExternalIdentifiersVisibility);
-        }
-        
-        if(Visibility.PRIVATE.equals(existingExternalIdentifiersVisibility)) {
-           if(existingExternalIdentifiers != null) {
-               for(ExternalIdentifier extId : updatedExternalIdentifiers.getExternalIdentifier()) {
-                   if(!existingExternalIdentifiers.getExternalIdentifier().contains(extId)) {
-                       existingExternalIdentifiers.getExternalIdentifier().add(extId);
-                   }
-               }
-           } 
-        } else {
-            existing.setExternalIdentifiers(updatedExternalIdentifiers);
-        }        
-    }
+		ExternalIdentifiers existingExternalIdentifiers = existing
+				.getExternalIdentifiers();
+		ExternalIdentifiers updatedExternalIdentifiers = updated
+				.getExternalIdentifiers();
 
-    @Override
-    public void copyUpdatedShortDescriptionToExistingPreservingVisibility(OrcidBio existing, OrcidBio updated) {
-        if (updated.getBiography() == null) {
-            return;
-        }
-        Biography existingShortDescription = existing.getBiography();
-        Biography updatedShortDescription = updated.getBiography();
+		Visibility existingExternalIdentifiersVisibility = existingExternalIdentifiers != null ? existingExternalIdentifiers
+				.getVisibility() : null;
+		Visibility updatedExternalIdentifiersVisibility = updatedExternalIdentifiers
+				.getVisibility();
 
-        Visibility existingShortDescriptionVisibility = existingShortDescription != null ? existingShortDescription.getVisibility()
-                : OrcidVisibilityDefaults.SHORT_DESCRIPTION_DEFAULT.getVisibility();
-        Visibility updatedShortDescriptionVisibility = updatedShortDescription != null ? updatedShortDescription.getVisibility() : existingShortDescriptionVisibility;
+		if (updatedExternalIdentifiersVisibility == null
+				&& existingExternalIdentifiersVisibility == null) {
+			updatedExternalIdentifiers
+					.setVisibility(OrcidVisibilityDefaults.EXTERNAL_IDENTIFIER_DEFAULT
+							.getVisibility());
+		} else if (updatedExternalIdentifiersVisibility == null
+				&& existingExternalIdentifiersVisibility != null) {
+			updatedExternalIdentifiers
+					.setVisibility(existingExternalIdentifiersVisibility);
+		}
 
-        if (updatedShortDescriptionVisibility == null && existingShortDescriptionVisibility == null) {
-            updatedShortDescription.setVisibility(OrcidVisibilityDefaults.SHORT_DESCRIPTION_DEFAULT.getVisibility());
-        } else if (updatedShortDescriptionVisibility == null && existingShortDescriptionVisibility != null) {
-            updatedShortDescription.setVisibility(existingShortDescriptionVisibility);
-        }
-        
-        if(existingShortDescription != null) {
-            if(!existingShortDescription.getVisibility().equals(Visibility.PRIVATE)) {
-                existing.setBiography(updatedShortDescription);    
-            }
-        } else {
-            existing.setBiography(updatedShortDescription);
-        }                
-    }
+		if (Visibility.PRIVATE.equals(existingExternalIdentifiersVisibility)) {
+			if (existingExternalIdentifiers != null) {
+				for (ExternalIdentifier extId : updatedExternalIdentifiers
+						.getExternalIdentifier()) {
+					if (!existingExternalIdentifiers.getExternalIdentifier()
+							.contains(extId)) {
+						existingExternalIdentifiers.getExternalIdentifier()
+								.add(extId);
+					}
+				}
+			}
+		} else {
+			existing.setExternalIdentifiers(updatedExternalIdentifiers);
+		}
+	}
 
-    @Override
-    public void copyUpdatedKeywordsToExistingPreservingVisibility(OrcidBio existing, OrcidBio updated) {
-        if (updated.getKeywords() == null) {
-            return;
-        }
+	@Override
+	public void copyUpdatedShortDescriptionToExistingPreservingVisibility(
+			OrcidBio existing, OrcidBio updated) {
+		if (updated.getBiography() == null) {
+			return;
+		}
+		Biography existingShortDescription = existing.getBiography();
+		Biography updatedShortDescription = updated.getBiography();
 
-        Visibility existingKeywordsVisibility = existing.getKeywords() != null && existing.getKeywords().getVisibility() != null ? existing.getKeywords().getVisibility()
-                : OrcidVisibilityDefaults.KEYWORD_DEFAULT.getVisibility();
-        if(existingKeywordsVisibility.equals(Visibility.PRIVATE)) {
-            Keywords existingKeywords = existing.getKeywords();
-            if(existingKeywords != null) {
-                for(Keyword keyword : updated.getKeywords().getKeyword()) {
-                    if(!existingKeywords.getKeyword().contains(keyword)) {
-                        existingKeywords.getKeyword().add(keyword);
-                    }
-                }
-            }
-        } else {
-            Visibility updatedKeywordsVisibility = updated.getKeywords().getVisibility() != null ? updated.getKeywords().getVisibility() : existingKeywordsVisibility;
-            Keywords updatedKeywords = updated.getKeywords();
-            updatedKeywords.setVisibility(updatedKeywordsVisibility);
-            existing.setKeywords(updatedKeywords);
-        }        
-    }
+		Visibility existingShortDescriptionVisibility = existingShortDescription != null ? existingShortDescription
+				.getVisibility()
+				: OrcidVisibilityDefaults.SHORT_DESCRIPTION_DEFAULT
+						.getVisibility();
+		Visibility updatedShortDescriptionVisibility = updatedShortDescription != null ? updatedShortDescription
+				.getVisibility() : existingShortDescriptionVisibility;
 
-    @Override
-    public void copyUpdatedContactDetailsToExistingPreservingVisibility(OrcidBio existing, OrcidBio updated) {
-        if (updated.getContactDetails() == null) {
-            return;
-        }
+		if (updatedShortDescriptionVisibility == null
+				&& existingShortDescriptionVisibility == null) {
+			updatedShortDescription
+					.setVisibility(OrcidVisibilityDefaults.SHORT_DESCRIPTION_DEFAULT
+							.getVisibility());
+		} else if (updatedShortDescriptionVisibility == null
+				&& existingShortDescriptionVisibility != null) {
+			updatedShortDescription
+					.setVisibility(existingShortDescriptionVisibility);
+		}
 
-        ContactDetails updatedContactDetails = updated.getContactDetails();
-        ContactDetails existingContactDetails = existing.getContactDetails();
+		if (existingShortDescription != null) {
+			if (!existingShortDescription.getVisibility().equals(
+					Visibility.PRIVATE)) {
+				existing.setBiography(updatedShortDescription);
+			}
+		} else {
+			existing.setBiography(updatedShortDescription);
+		}
+	}
 
-        Email updatedPrimaryEmail = updatedContactDetails.retrievePrimaryEmail();
+	@Override
+	public void copyUpdatedKeywordsToExistingPreservingVisibility(
+			OrcidBio existing, OrcidBio updated) {
+		if (updated.getKeywords() == null) {
+			return;
+		}
 
-        for (Email existingEmail : existingContactDetails.getEmail()) {
-            Email updatedEmail = updatedContactDetails.getEmailByString(existingEmail.getValue());
-            if (updatedEmail == null) {
-                // Make sure existing private emails are preserved. The API
-                // client wouldn't have been able to see these to know to write
-                // them back.
-                if (Visibility.PRIVATE.equals(existingEmail.getVisibility())) {
-                    // Make sure not ending up with more than one primary.
-                    if (updatedPrimaryEmail != null) {
-                        existingEmail.setPrimary(false);
-                    }
-                    updatedContactDetails.getEmail().add(existingEmail);
-                }
-            } else {
-                if (updatedEmail.getVisibility() == null) {
-                    // Make sure existing privacy level is preserved if not
-                    // specified in incoming.
-                    updatedEmail.setVisibility(existingEmail.getVisibility());
-                }
-            }
-        }
+		Visibility existingKeywordsVisibility = existing.getKeywords() != null
+				&& existing.getKeywords().getVisibility() != null ? existing
+				.getKeywords().getVisibility()
+				: OrcidVisibilityDefaults.KEYWORD_DEFAULT.getVisibility();
+		if (existingKeywordsVisibility.equals(Visibility.PRIVATE)) {
+			Keywords existingKeywords = existing.getKeywords();
+			if (existingKeywords != null) {
+				for (Keyword keyword : updated.getKeywords().getKeyword()) {
+					if (!existingKeywords.getKeyword().contains(keyword)) {
+						existingKeywords.getKeyword().add(keyword);
+					}
+				}
+			}
+		} else {
+			Visibility updatedKeywordsVisibility = updated.getKeywords()
+					.getVisibility() != null ? updated.getKeywords()
+					.getVisibility() : existingKeywordsVisibility;
+			Keywords updatedKeywords = updated.getKeywords();
+			updatedKeywords.setVisibility(updatedKeywordsVisibility);
+			existing.setKeywords(updatedKeywords);
+		}
+	}
 
-        // Set any remaining null visibilities to the default value.
-        for (Email email : updatedContactDetails.getEmail()) {
-            if (email.getVisibility() == null) {
-                if (email.isPrimary()) {
-                    email.setVisibility(OrcidVisibilityDefaults.PRIMARY_EMAIL_DEFAULT.getVisibility());
-                } else {
-                    email.setVisibility(OrcidVisibilityDefaults.ALTERNATIVE_EMAIL_DEFAULT.getVisibility());
-                }
-            }
-        }
+	@Override
+	public void copyUpdatedContactDetailsToExistingPreservingVisibility(
+			OrcidBio existing, OrcidBio updated) {
+		if (updated.getContactDetails() == null) {
+			return;
+		}
 
-        // Set updated emails to existing contact details
-        existingContactDetails.setEmail(updatedContactDetails.getEmail());
+		ContactDetails updatedContactDetails = updated.getContactDetails();
+		ContactDetails existingContactDetails = existing.getContactDetails();
 
-        // If contact details are null, just replace them with the updated ones
-        if (existingContactDetails.getAddress() == null) {
-            existingContactDetails.setAddress(updatedContactDetails.getAddress());
-        } else {
-            Address existingAddress = existingContactDetails.getAddress();
-            Address updatedAddress = updatedContactDetails.getAddress();
+		Email updatedPrimaryEmail = updatedContactDetails
+				.retrievePrimaryEmail();
 
-            if (updatedAddress != null) {
-                if (existingAddress.getCountry() != null) {
-                    if (!Visibility.PRIVATE.equals(existingAddress.getCountry().getVisibility())) {
-                        if(updatedAddress.getCountry() != null) {
-                            existingAddress.getCountry().setValue(updatedAddress.getCountry().getValue());
-                        }
-                    }
-                } else {
-                    existingAddress.setCountry(updatedAddress.getCountry());
-                }
-            }
-        }
+		for (Email existingEmail : existingContactDetails.getEmail()) {
+			Email updatedEmail = updatedContactDetails
+					.getEmailByString(existingEmail.getValue());
+			if (updatedEmail == null) {
+				// Make sure existing private emails are preserved. The API
+				// client wouldn't have been able to see these to know to write
+				// them back.
+				if (Visibility.PRIVATE.equals(existingEmail.getVisibility())) {
+					// Make sure not ending up with more than one primary.
+					if (updatedPrimaryEmail != null) {
+						existingEmail.setPrimary(false);
+					}
+					updatedContactDetails.getEmail().add(existingEmail);
+				}
+			} else {
+				if (updatedEmail.getVisibility() == null
+						|| Visibility.PRIVATE.equals(existingEmail
+								.getVisibility())) {
+					// Make sure existing privacy level is preserved if not
+					// specified in incoming.
+					updatedEmail.setVisibility(existingEmail.getVisibility());
+				}
+				if (updatedPrimaryEmail == null && existingEmail.isPrimary()) {
+					updatedEmail.setPrimary(existingEmail.isPrimary());
+				}
+			}
+		}
 
-        // Check if visibility is empty and fill it
-        if (existingContactDetails.getAddress() != null && existingContactDetails.getAddress().getCountry() != null
-                && existingContactDetails.getAddress().getCountry().getVisibility() == null) {
-            existingContactDetails.getAddress().getCountry().setVisibility(OrcidVisibilityDefaults.COUNTRY_DEFAULT.getVisibility());
-        }
-    }
+		// Set any remaining null visibilities to the default value.
+		for (Email email : updatedContactDetails.getEmail()) {
+			if (email.getVisibility() == null) {
+				if (email.isPrimary()) {
+					email.setVisibility(OrcidVisibilityDefaults.PRIMARY_EMAIL_DEFAULT
+							.getVisibility());
+				} else {
+					email.setVisibility(OrcidVisibilityDefaults.ALTERNATIVE_EMAIL_DEFAULT
+							.getVisibility());
+				}
+			}
+		}
 
-    @Override
-    public void copyUpdatedResearcherUrlPreservingVisbility(OrcidBio existing, OrcidBio updated) {
-        if (updated.getResearcherUrls() == null) {
-            return;
-        }
-        ResearcherUrls existingResearcherUrls = existing.getResearcherUrls();
-        ResearcherUrls updatedResearcherUrls = updated.getResearcherUrls();
+		// Set updated emails to existing contact details
+		existingContactDetails.setEmail(updatedContactDetails.getEmail());
 
-        Visibility existingVisibility = (existingResearcherUrls != null && existingResearcherUrls.getVisibility() != null) ? existingResearcherUrls.getVisibility()
-                : OrcidVisibilityDefaults.RESEARCHER_URLS_DEFAULT.getVisibility();
+		// If contact details are null, just replace them with the updated ones
+		if (existingContactDetails.getAddress() == null) {
+			existingContactDetails.setAddress(updatedContactDetails
+					.getAddress());
+		} else {
+			Address existingAddress = existingContactDetails.getAddress();
+			Address updatedAddress = updatedContactDetails.getAddress();
 
-        // If it is private, add the new researcher url but preserve visibility
-        if (existingVisibility.equals(Visibility.PRIVATE)) {
-            for (ResearcherUrl rUrl : updatedResearcherUrls.getResearcherUrl()) {
-                if (!existingResearcherUrls.getResearcherUrl().contains(rUrl)) {
-                    existingResearcherUrls.getResearcherUrl().add(rUrl);
-                }
-            }
-        } else {
-            Visibility updatedVisibility = (updatedResearcherUrls != null && updatedResearcherUrls.getVisibility() != null) ? updatedResearcherUrls.getVisibility()
-                    : existingVisibility;
+			if (updatedAddress != null) {
+				if (existingAddress.getCountry() != null) {
+					if (!Visibility.PRIVATE.equals(existingAddress.getCountry()
+							.getVisibility())) {
+						if (updatedAddress.getCountry() != null) {
+							existingAddress.getCountry().setValue(
+									updatedAddress.getCountry().getValue());
+						}
+					}
+				} else {
+					existingAddress.setCountry(updatedAddress.getCountry());
+				}
+			}
+		}
 
-            // now visibility has been preserved, overwrite the content
-            updatedResearcherUrls.setVisibility(updatedVisibility);
-            existing.setResearcherUrls(updatedResearcherUrls);
-        }
-    }
+		// Check if visibility is empty and fill it
+		if (existingContactDetails.getAddress() != null
+				&& existingContactDetails.getAddress().getCountry() != null
+				&& existingContactDetails.getAddress().getCountry()
+						.getVisibility() == null) {
+			existingContactDetails
+					.getAddress()
+					.getCountry()
+					.setVisibility(
+							OrcidVisibilityDefaults.COUNTRY_DEFAULT
+									.getVisibility());
+		}
+	}
 
-    @Override
-    public void copyUpdatedPersonalDetailsToExistingPreservingVisibility(OrcidBio existing, OrcidBio updated) {
+	@Override
+	public void copyUpdatedResearcherUrlPreservingVisbility(OrcidBio existing,
+			OrcidBio updated) {
+		if (updated.getResearcherUrls() == null) {
+			return;
+		}
+		ResearcherUrls existingResearcherUrls = existing.getResearcherUrls();
+		ResearcherUrls updatedResearcherUrls = updated.getResearcherUrls();
 
-        PersonalDetails existingPersonalDetails = existing.getPersonalDetails();
-        PersonalDetails updatedPersonalDetails = updated.getPersonalDetails();
+		Visibility existingVisibility = (existingResearcherUrls != null && existingResearcherUrls
+				.getVisibility() != null) ? existingResearcherUrls
+				.getVisibility()
+				: OrcidVisibilityDefaults.RESEARCHER_URLS_DEFAULT
+						.getVisibility();
 
-        // if no update, nothing to do
-        if (updatedPersonalDetails == null) {
-            return;
-        }
+		// If it is private, add the new researcher url but preserve visibility
+		if (existingVisibility.equals(Visibility.PRIVATE)) {
+			for (ResearcherUrl rUrl : updatedResearcherUrls.getResearcherUrl()) {
+				if (!existingResearcherUrls.getResearcherUrl().contains(rUrl)) {
+					existingResearcherUrls.getResearcherUrl().add(rUrl);
+				}
+			}
+		} else {
+			Visibility updatedVisibility = (updatedResearcherUrls != null && updatedResearcherUrls
+					.getVisibility() != null) ? updatedResearcherUrls
+					.getVisibility() : existingVisibility;
 
-        // if existing null, update unconditionally - we've no previous to
-        // compare to
-        if (existingPersonalDetails == null) {
-            existing.setPersonalDetails(updatedPersonalDetails);
-            return;
-        }
+			// now visibility has been preserved, overwrite the content
+			updatedResearcherUrls.setVisibility(updatedVisibility);
+			existing.setResearcherUrls(updatedResearcherUrls);
+		}
+	}
 
-        // otherwise preserve visibility of other names && credit names
-        copyOtherNamesPreservingVisibility(existingPersonalDetails, updatedPersonalDetails);
-        copyCreditNamePreservingVisibility(existingPersonalDetails, updatedPersonalDetails);        
-        if(updatedPersonalDetails.getFamilyName() != null && !PojoUtil.isEmpty(updatedPersonalDetails.getFamilyName().getContent())) {
-            existingPersonalDetails.setFamilyName(updatedPersonalDetails.getFamilyName());
-        }
-        
-        if(updatedPersonalDetails.getGivenNames() != null && !PojoUtil.isEmpty(updatedPersonalDetails.getGivenNames().getContent())) {
-            existingPersonalDetails.setGivenNames(updatedPersonalDetails.getGivenNames());
-        }        
-    }
+	@Override
+	public void copyUpdatedPersonalDetailsToExistingPreservingVisibility(
+			OrcidBio existing, OrcidBio updated) {
 
-    private void copyOtherNamesPreservingVisibility(PersonalDetails existingPersonalDetails, PersonalDetails updatedPersonalDetails) {
-        OtherNames existingOtherNames = existingPersonalDetails.getOtherNames();
-        OtherNames updatedOtherNames = updatedPersonalDetails.getOtherNames();
+		PersonalDetails existingPersonalDetails = existing.getPersonalDetails();
+		PersonalDetails updatedPersonalDetails = updated.getPersonalDetails();
 
-        // if no update, nothing to do
-        if (updatedOtherNames == null) {
-            return;
-        }
-        // otherwise take into account the visibility of updated and existing
-        Visibility existingVisibility = existingOtherNames.getVisibility() != null ? existingOtherNames.getVisibility() : OrcidVisibilityDefaults.OTHER_NAMES_DEFAULT
-                .getVisibility();
-        // If it is private, add the new ones, but preserve the visibility
-        if (existingVisibility.equals(Visibility.PRIVATE)) {
-            for (OtherName otherName : updatedOtherNames.getOtherName()) {
-                if (!existingOtherNames.getOtherName().contains(otherName)) {
-                    existingOtherNames.getOtherName().add(otherName);
-                }
-            }
-        } else {
-            updatedOtherNames.setVisibility(updatedOtherNames.getVisibility() != null ? updatedOtherNames.getVisibility() : existingVisibility);
-            // now visibility has been preserved, overwrite the content
-            existingPersonalDetails.setOtherNames(updatedOtherNames);
-        }
+		// if no update, nothing to do
+		if (updatedPersonalDetails == null) {
+			return;
+		}
 
-    }
+		// if existing null, update unconditionally - we've no previous to
+		// compare to
+		if (existingPersonalDetails == null) {
+			existing.setPersonalDetails(updatedPersonalDetails);
+			return;
+		}
 
-    private void copyCreditNamePreservingVisibility(PersonalDetails existingPersonalDetails, PersonalDetails updatedPersonalDetails) {
-        CreditName existingCreditName = existingPersonalDetails.getCreditName();
-        CreditName updatedCreditName = updatedPersonalDetails.getCreditName();
+		// otherwise preserve visibility of other names && credit names
+		copyOtherNamesPreservingVisibility(existingPersonalDetails,
+				updatedPersonalDetails);
+		copyCreditNamePreservingVisibility(existingPersonalDetails,
+				updatedPersonalDetails);
+		if (updatedPersonalDetails.getFamilyName() != null
+				&& !PojoUtil.isEmpty(updatedPersonalDetails.getFamilyName()
+						.getContent())) {
+			existingPersonalDetails.setFamilyName(updatedPersonalDetails
+					.getFamilyName());
+		}
 
-        // if no update, nothing to do
-        if (updatedCreditName == null) {
-            return;
-        }
+		if (updatedPersonalDetails.getGivenNames() != null
+				&& !PojoUtil.isEmpty(updatedPersonalDetails.getGivenNames()
+						.getContent())) {
+			existingPersonalDetails.setGivenNames(updatedPersonalDetails
+					.getGivenNames());
+		}
+	}
 
-        // otherwise take into account the visibility of updated and existing
-        Visibility existingVisibility = (existingCreditName != null && existingCreditName.getVisibility() != null) ? existingCreditName.getVisibility()
-                : OrcidVisibilityDefaults.CREDIT_NAME_DEFAULT.getVisibility();
-        // If it is private, ignore the request
-        if (!existingVisibility.equals(Visibility.PRIVATE)) {
-            Visibility updatedVisibility = (updatedCreditName != null && updatedCreditName.getVisibility() != null) ? updatedCreditName.getVisibility()
-                    : existingVisibility;
-            updatedCreditName.setVisibility(updatedVisibility);
-            // now visibility has been preserved, overwrite the content
-            existingPersonalDetails.setCreditName(updatedCreditName);
-        }
+	private void copyOtherNamesPreservingVisibility(
+			PersonalDetails existingPersonalDetails,
+			PersonalDetails updatedPersonalDetails) {
+		OtherNames existingOtherNames = existingPersonalDetails.getOtherNames();
+		OtherNames updatedOtherNames = updatedPersonalDetails.getOtherNames();
 
-    }
+		// if no update, nothing to do
+		if (updatedOtherNames == null) {
+			return;
+		}
+		// otherwise take into account the visibility of updated and existing
+		Visibility existingVisibility = existingOtherNames.getVisibility() != null ? existingOtherNames
+				.getVisibility() : OrcidVisibilityDefaults.OTHER_NAMES_DEFAULT
+				.getVisibility();
+		// If it is private, add the new ones, but preserve the visibility
+		if (existingVisibility.equals(Visibility.PRIVATE)) {
+			for (OtherName otherName : updatedOtherNames.getOtherName()) {
+				if (!existingOtherNames.getOtherName().contains(otherName)) {
+					existingOtherNames.getOtherName().add(otherName);
+				}
+			}
+		} else {
+			updatedOtherNames
+					.setVisibility(updatedOtherNames.getVisibility() != null ? updatedOtherNames
+							.getVisibility() : existingVisibility);
+			// now visibility has been preserved, overwrite the content
+			existingPersonalDetails.setOtherNames(updatedOtherNames);
+		}
 
-    @Override
-    public void copyUpdatedWorksPreservingVisbility(OrcidWorks existingWorks, OrcidWorks updatedWorks) {
-        copyActivitiesToExistingPreservingVisibility(existingWorks, updatedWorks, OrcidVisibilityDefaults.WORKS_DEFAULT.getVisibility());
-    }
+	}
 
-    @Override
-    public void copyUpdatedFundingListVisibilityInformationOnlyPreservingVisbility(FundingList existingFundingList, FundingList updatedFundingList) {
-        throw new RuntimeException("Not implemented!");
-    }
+	private void copyCreditNamePreservingVisibility(
+			PersonalDetails existingPersonalDetails,
+			PersonalDetails updatedPersonalDetails) {
+		CreditName existingCreditName = existingPersonalDetails.getCreditName();
+		CreditName updatedCreditName = updatedPersonalDetails.getCreditName();
+
+		// if no update, nothing to do
+		if (updatedCreditName == null) {
+			return;
+		}
+
+		// otherwise take into account the visibility of updated and existing
+		Visibility existingVisibility = (existingCreditName != null && existingCreditName
+				.getVisibility() != null) ? existingCreditName.getVisibility()
+				: OrcidVisibilityDefaults.CREDIT_NAME_DEFAULT.getVisibility();
+		// If it is private, ignore the request
+		if (!existingVisibility.equals(Visibility.PRIVATE)) {
+			Visibility updatedVisibility = (updatedCreditName != null && updatedCreditName
+					.getVisibility() != null) ? updatedCreditName
+					.getVisibility() : existingVisibility;
+			updatedCreditName.setVisibility(updatedVisibility);
+			// now visibility has been preserved, overwrite the content
+			existingPersonalDetails.setCreditName(updatedCreditName);
+		}
+
+	}
+
+	@Override
+	public void copyUpdatedWorksPreservingVisbility(OrcidWorks existingWorks,
+			OrcidWorks updatedWorks) {
+		copyActivitiesToExistingPreservingVisibility(existingWorks,
+				updatedWorks,
+				OrcidVisibilityDefaults.WORKS_DEFAULT.getVisibility());
+	}
+
+	@Override
+	public void copyUpdatedFundingListVisibilityInformationOnlyPreservingVisbility(
+			FundingList existingFundingList, FundingList updatedFundingList) {
+		throw new RuntimeException("Not implemented!");
+	}
 
 }
