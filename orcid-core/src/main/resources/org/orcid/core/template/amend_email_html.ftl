@@ -17,6 +17,99 @@
 
 -->
 <#import "email_macros.ftl" as emailMacros />
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>      
+    </head>
+    <body style="font-family: Arial, Helvetica; font-size: 14px;">
+        <div id="container" style="padding: 5px; color: #494A4C;">
+            
+            <img src="https://orcid.org/sites/all/themes/orcid/img/orcid-logo.png" alt="ORCID.org"/>
+            <hr>
+            <p style="font-weight: bold;">Hi John Watson,</p>
+            <p>Here's what has happened since the last time you visited ORCID record. <a href="" title="">View all notifications</a></p>
+            <div id="inner-container" style="padding: 0 15px;">
+                <span style="font-weight: bold;">ORCID</span> would like to let you know
+                <ul style="padding: 0 10px;">
+                    <li style="list-style-type: none;">We have release a new messaging feature... <a href="" title="read more" style="text-decoration: none; color: #338caf">read more</a>.</li>
+                    <li style="list-style-type: none;">The ORCID registry is now available in Orc... <a href="" title="read more" style="text-decoration: none; color: #338caf">read more</a>.</li>
+                </ul>                
+            </div>
+            <div id="inner-container" style="padding: 0 15px">
+                
+                <div class="item">
+                    <p><span style="font-weight: bold;">Test credentials</span> would like to add the following items to your record.</p>
+                    <table width="100%" style="margin: 0 15px; max-width: 600px;">                    
+                        <tr>
+                            <td colspan="0" rowspan="0" style="background: #494A4C; padding: 7px; color: #FFF;  font-size: 14px; font-weight: bold">
+                                Works(3)
+                            </td>
+                            <td colspan="0" rowspan="0" width="100">
+                                    <a href="" title="" width="100%" style="background: #338caf; padding: 7px; color: #FFF;  font-size: 14px;  text-decoration: none; display: block; text-align: center; font-weight: bold;"><img src="cloud-upload.png " alt="" width="15" height="15"> Add now</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 10px;">
+                                <ul style="padding: 0; font-size: 14px;">
+                                    <li style="list-style-type: none;"><span style="font-weight: bold">Title of the work</span> (doi: 123446/67654)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>           
+                </div>
+
+                <div class="item">
+                    <p><span style="font-weight: bold;">Test credentials</span> would like to add the following items to your record.</p>
+                    <table width="100%" style="margin: 0 15px; max-width: 600px;">                    
+                        <tr>
+                            <td colspan="0" rowspan="0" style="background: #494A4C; padding: 7px; color: #FFF;  font-size: 14px; font-weight: bold">
+                                Works(3)
+                            </td>
+                            <td colspan="0" rowspan="0" width="100">
+                                    <a href="" title="" width="100%" style="background: #338caf; padding: 7px; color: #FFF;  font-size: 14px;  text-decoration: none; display: block; text-align: center; font-weight: bold;"><img src="cloud-upload.png " alt="" width="15" height="15"> Add now</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 10px;">
+                                <ul style="padding: 0; font-size: 14px;">
+                                    <li style="list-style-type: none;"><span style="font-weight: bold">Title of the work</span> (doi: 123446/67654)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>           
+                </div>
+
+                <div class="item">
+                    <p><span style="font-weight: bold;">Boston University</span> has added the folling items to your record.</p>
+                    <table width="100%" style="margin: 0 15px; max-width: 600px;">
+                        <tr>
+                            <td colspan="0" rowspan="0" style="background: #494A4C; padding: 7px; color: #FFF;  font-size: 14px; font-weight: bold">
+                                Education(1)
+                            </td>
+                            <td colspan="0" rowspan="0" width="200">
+                                    <a href="" title="" width="100%" style="background: #338caf; padding: 7px; color: #FFF;  font-size: 14px;  text-decoration: none; display: block; text-align: center; font-weight: bold;">View on your record</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding: 10px;">
+                                <ul style="padding: 0; font-size: 14px;">
+                                    <li style="list-style-type: none;"><span style="font-weight: bold">Title of the work</span> (doi: 123446/67654)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>           
+                </div>
+
+
+            </div>
+        </div>        
+    </body>
+</html>
+
+
+<!-- Old one 
 <!DOCTYPE html>
 <html>
 	<head>
@@ -49,3 +142,4 @@
 		 </div>
 	 </body>
  </html>
+ -->
