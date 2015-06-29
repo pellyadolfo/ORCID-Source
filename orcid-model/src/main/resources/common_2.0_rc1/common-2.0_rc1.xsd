@@ -1542,7 +1542,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:complexType name="activity-summary">
+	<xs:complexType name="common">
 		<xs:sequence>
 			<xs:element ref="common:created-date" minOccurs="0"
 				maxOccurs="1" />
@@ -1551,9 +1551,18 @@
 			<xs:element ref="common:source" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attribute name="put-code" type="common:put-code" use="optional" />
-		<xs:attribute name="visibility" type="common:visibility" />
-		<xs:attribute name="display-index" type="xs:string" use="optional" />
-		<xs:attribute name="path" type="common:activity-path" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="activity-summary">
+		<xs:complexContent>
+			<xs:extension base="common:common">
+				<xs:attribute name="visibility" type="common:visibility" />
+				<xs:attribute name="display-index" type="xs:string"
+					use="optional" />
+				<xs:attribute name="path" type="common:activity-path"
+					use="optional" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 
 </xs:schema>

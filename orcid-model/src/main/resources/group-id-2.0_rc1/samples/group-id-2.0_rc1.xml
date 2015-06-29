@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group-id:group put-code="0" xmlns:common="http://www.orcid.org/ns/common"
+	xmlns:group-id="http://www.orcid.org/ns/group-id" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.orcid.org/ns/group-id ../group-id-2.0_rc1.xsd ">
+	<common:created-date>2001-12-31T12:00:00</common:created-date>
+	<common:last-modified-date>2001-12-31T12:00:00</common:last-modified-date>
+	<common:source>
+		<common:source-orcid>
+			<common:uri>http://orcid.org/8888-8888-8888-8880</common:uri>
+			<common:path>8888-8888-8888-8880</common:path>
+			<common:host>orcid.org</common:host>
+		</common:source-orcid>
+		<common:source-name />
+	</common:source>
+	<group-id:name>group-id:name</group-id:name>
+	<group-id:identifier-type>ringgold</group-id:identifier-type>
+	<group-id:identifier>group-id:identifier</group-id:identifier>
+	<group-id:description>group-id:description</group-id:description>
+	<group-id:type>publisher</group-id:type>
+</group-id:group>
