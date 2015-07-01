@@ -41,7 +41,7 @@
 			<xs:complexContent>
 				<xs:extension base="common:common">
 					<xs:sequence>
-						<xs:element name="name" type="common:non-empty-string"
+						<xs:element name="name" type="common:string-1000"
 							minOccurs="1" maxOccurs="1">
 							<xs:annotation>
 								<xs:documentation>Group display name
@@ -87,7 +87,7 @@
 								</xs:restriction>
 							</xs:simpleType>
 						</xs:element>
-						<xs:element name="identifier" type="common:non-empty-string"
+						<xs:element name="identifier" type="common:string-1000"
 							maxOccurs="1" minOccurs="1">
 							<xs:annotation>
 								<xs:documentation>The unique generated identifier of the group

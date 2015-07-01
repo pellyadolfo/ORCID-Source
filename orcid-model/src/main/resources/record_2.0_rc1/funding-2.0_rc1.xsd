@@ -63,7 +63,7 @@
 							minOccurs="0" maxOccurs="1" />
 						<xs:element name="title" type="funding:funding-title"
 							minOccurs="1" />
-						<xs:element name="short-description" type="common:short-description"
+						<xs:element name="short-description" type="common:string-5000"
 							minOccurs="0" />
 						<xs:element name="amount" type="common:amount"
 							minOccurs="0" maxOccurs="1" />

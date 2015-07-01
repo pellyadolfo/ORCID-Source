@@ -55,7 +55,7 @@
 							minOccurs="0" />
 						<xs:element name="journal-title" type="work:journal-title"
 							minOccurs="0" maxOccurs="1" />
-						<xs:element name="short-description" type="common:short-description"
+						<xs:element name="short-description" type="common:string-5000"
 							minOccurs="0" />
 						<xs:element name="citation" minOccurs="0" type="work:citation">
 							<xs:annotation>

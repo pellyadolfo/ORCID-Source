@@ -1375,6 +1375,17 @@
 		</xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="string-5000">
+		<xs:annotation>
+			<xs:documentation>A short narrative (few sentences) describing the
+				item.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="5000"></xs:maxLength>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="string-with-lang-code">
 		<xs:annotation>
 			<xs:documentation>A non-empty string that includes a language code to
@@ -1388,17 +1399,6 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-
-	<xs:simpleType name="short-description">
-		<xs:annotation>
-			<xs:documentation>A short narrative (few sentences) describing the
-				item.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:maxLength value="5000"></xs:maxLength>
-		</xs:restriction>
-	</xs:simpleType>
 
 	<xs:complexType name="credit-name">
 		<xs:annotation>
