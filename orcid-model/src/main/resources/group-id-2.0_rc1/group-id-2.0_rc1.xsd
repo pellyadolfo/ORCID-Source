@@ -73,7 +73,6 @@
 												Identifies periodicals worldwide, whether
 												in printed form or other
 												media (including online).
-
 											</xs:documentation>
 										</xs:annotation>
 									</xs:enumeration>
@@ -137,7 +136,6 @@
 											</xs:documentation>
 										</xs:annotation>
 									</xs:enumeration>
-
 									<xs:enumeration value="newspaper">
 										<xs:annotation>
 											<xs:documentation>
