@@ -37,6 +37,7 @@ import org.orcid.integration.api.helper.OauthHelper;
 import org.orcid.integration.api.notifications.NotificationsApiClientImpl;
 import org.orcid.integration.api.t2.T2OAuthAPIService;
 import org.orcid.jaxb.model.message.ScopePathType;
+import org.orcid.jaxb.model.notification.addactivities.AuthorizationUrl;
 import org.orcid.jaxb.model.notification.addactivities.NotificationAddActivities;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
@@ -87,6 +88,20 @@ public class NotificationsTest {
         String locationPath = response.getLocation().getPath();
         assertTrue("Location header path should match pattern, but was " + locationPath,
                 locationPath.matches(".*/v2.0_rc1/" + testUser1OrcidId + "/notifications/add-activities/\\d+"));
+    }
+
+    @Test
+    public void createAddActivitiesNotificationWithTrailingSpacesInAuthorizationUrl() throws JSONException {
+        NotificationAddActivities notification = unmarshallFromPath("/notification_2.0_rc1/samples/notification-add-activities-2.0_rc1.xml");
+        notification.setPutCode(null);
+        AuthorizationUrl authUrl = notification.getAuthorizationUrl();
+        authUrl.setUri(authUrl.getUri() + "    ");
+
+        String accessToken = oauthHelper.getClientCredentialsAccessToken(client1ClientId, client1ClientSecret, ScopePathType.PREMIUM_NOTIFICATION);
+
+        ClientResponse response = notificationsClient.addAddActivitiesNotificationXml(testUser1OrcidId, notification, accessToken);
+        assertNotNull(response);
+        assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 
     public NotificationAddActivities unmarshallFromPath(String path) {
