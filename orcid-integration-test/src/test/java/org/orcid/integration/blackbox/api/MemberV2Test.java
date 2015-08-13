@@ -954,6 +954,147 @@ public class MemberV2Test extends BlackBoxBase {
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), postResponse.getStatus());        
     }
     
+    @Test
+    public void testCantAddWorksWithDuplicatedExtIds() throws InterruptedException, JSONException {
+        String accessToken = getAccessToken();        
+        
+        Work work1 = (Work) unmarshallFromPath("/record_2.0_rc1/samples/work-2.0_rc1.xml", Work.class);
+        work1.setPutCode(null);
+        org.orcid.jaxb.model.record.WorkTitle title1 = new org.orcid.jaxb.model.record.WorkTitle();
+        title1.setTitle(new Title("Work # 1"));
+        work1.setWorkTitle(title1);
+        WorkExternalIdentifier wExtId1 = new WorkExternalIdentifier();
+        wExtId1.setWorkExternalIdentifierId(new WorkExternalIdentifierId("Work Id " + System.currentTimeMillis()));
+        wExtId1.setWorkExternalIdentifierType(WorkExternalIdentifierType.DOI);
+        wExtId1.setRelationship(Relationship.SELF);
+        wExtId1.setUrl(new Url("http://orcid.org/work#1"));
+        work1.getExternalIdentifiers().getWorkExternalIdentifier().clear();
+        work1.getExternalIdentifiers().getWorkExternalIdentifier().add(wExtId1);
+        
+        //Add the first work
+        ClientResponse postResponse = memberV2ApiClient.createWorkXml(user1OrcidId, work1, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CREATED.getStatusCode(), postResponse.getStatus());
+        
+        /**
+         * For works where the ext id is SELF, we cant add duplicates
+         * */
+        //Add another ext id but let the other one there
+        WorkExternalIdentifier wExtId2 = new WorkExternalIdentifier();
+        wExtId2.setWorkExternalIdentifierId(new WorkExternalIdentifierId("Work Id " + System.currentTimeMillis()));
+        wExtId2.setWorkExternalIdentifierType(WorkExternalIdentifierType.OTHER_ID);
+        wExtId2.setRelationship(Relationship.SELF);
+        wExtId2.setUrl(new Url("http://orcid.org/work#2"));
+        work1.getExternalIdentifiers().getWorkExternalIdentifier().add(wExtId2);
+        work1.getWorkTitle().getTitle().setContent("Work # 2");
+        
+        //Dont allow duplicates
+        postResponse = memberV2ApiClient.createWorkXml(user1OrcidId, work1, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CONFLICT.getStatusCode(), postResponse.getStatus());
+        
+        /**
+         * For works where the ext id is PART_OF, we can add it no matter if there is another one with the same id
+         * */
+        work1.getExternalIdentifiers().getWorkExternalIdentifier().clear();
+        wExtId1.setRelationship(Relationship.PART_OF);
+        work1.getExternalIdentifiers().getWorkExternalIdentifier().add(wExtId1);
+        work1.getWorkTitle().getTitle().setContent("Work # 3");
+        
+        //Allow it since the ext id is PART_OF
+        postResponse = memberV2ApiClient.createWorkXml(user1OrcidId, work1, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CREATED.getStatusCode(), postResponse.getStatus());        
+    }
+    
+    @Test
+    public void testCantAddFundingWithDuplicatedExtIds() throws InterruptedException, JSONException {
+        String accessToken = getAccessToken();
+        
+        Funding funding = (Funding) unmarshallFromPath("/record_2.0_rc1/samples/funding-2.0_rc1.xml", Funding.class);
+        funding.setPutCode(null);
+        funding.setVisibility(Visibility.PUBLIC);
+        funding.getExternalIdentifiers().getExternalIdentifier().clear();
+        FundingExternalIdentifier fExtId = new FundingExternalIdentifier();
+        fExtId.setType(FundingExternalIdentifierType.GRANT_NUMBER);
+        fExtId.setValue("Funding Id " + System.currentTimeMillis());
+        fExtId.setRelationship(Relationship.SELF);
+        funding.getExternalIdentifiers().getExternalIdentifier().add(fExtId);
+        
+        ClientResponse postResponse = memberV2ApiClient.createFundingXml(user1OrcidId, funding, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CREATED.getStatusCode(), postResponse.getStatus());
+        
+        /**
+         * For funding where the ext id is SELF, we cant add duplicates
+         * */
+        //Add another ext id but let the other one there
+        FundingExternalIdentifier fExtId2 = new FundingExternalIdentifier();
+        fExtId2.setType(FundingExternalIdentifierType.GRANT_NUMBER);
+        fExtId2.setValue("Funding Id " + System.currentTimeMillis() + "-other");
+        fExtId2.setRelationship(Relationship.SELF);
+        funding.getExternalIdentifiers().getExternalIdentifier().add(fExtId2);
+        
+        postResponse = memberV2ApiClient.createFundingXml(user1OrcidId, funding, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CONFLICT.getStatusCode(), postResponse.getStatus());
+        
+        /**
+         * For funding where the ext id is PART_OF, we can add it no matter if there is another one with the same id
+         * */
+        fExtId.setRelationship(Relationship.PART_OF);
+        funding.getExternalIdentifiers().getExternalIdentifier().clear();
+        funding.getExternalIdentifiers().getExternalIdentifier().add(fExtId);
+        
+        postResponse = memberV2ApiClient.createFundingXml(user1OrcidId, funding, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CREATED.getStatusCode(), postResponse.getStatus());
+    }
+    
+    @Test
+    public void testCantAddPeerReviewWithDuplicatedExtIds() throws InterruptedException, JSONException {
+        String accessToken = getAccessToken();
+        
+        PeerReview peerReview = (PeerReview) unmarshallFromPath("/record_2.0_rc1/samples/peer-review-2.0_rc1.xml", PeerReview.class);
+        peerReview.setPutCode(null);
+        peerReview.setGroupId(groupRecords.get(0).getGroupId());
+        peerReview.getExternalIdentifiers().getExternalIdentifier().clear();        
+        WorkExternalIdentifier pExtId = new WorkExternalIdentifier();
+        pExtId.setWorkExternalIdentifierId(new WorkExternalIdentifierId("Work Id " + System.currentTimeMillis()));
+        pExtId.setWorkExternalIdentifierType(WorkExternalIdentifierType.AGR);
+        pExtId.setRelationship(Relationship.SELF);
+        peerReview.getExternalIdentifiers().getExternalIdentifier().add(pExtId);
+                
+        ClientResponse postResponse = memberV2ApiClient.createPeerReviewXml(user1OrcidId, peerReview, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.ACCEPTED.getStatusCode(), postResponse.getStatus());
+        
+        /**
+         * For peer review where the ext id is SELF, we cant add duplicates
+         * */
+        //Add another ext id but let the other one there
+        WorkExternalIdentifier pExtId2 = new WorkExternalIdentifier();
+        pExtId2.setWorkExternalIdentifierId(new WorkExternalIdentifierId("Work Id " + System.currentTimeMillis() + "-other"));
+        pExtId2.setWorkExternalIdentifierType(WorkExternalIdentifierType.AGR);
+        pExtId2.setRelationship(Relationship.SELF);
+        peerReview.getExternalIdentifiers().getExternalIdentifier().add(pExtId2);
+        
+        postResponse = memberV2ApiClient.createPeerReviewXml(user1OrcidId, peerReview, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CONFLICT.getStatusCode(), postResponse.getStatus());
+        
+        /**
+         * For peer review where the ext id is PART_OF, we can add it no matter if there is another one with the same id
+         * */
+        pExtId.setRelationship(Relationship.PART_OF);
+        peerReview.getExternalIdentifiers().getWorkExternalIdentifier().clear();
+        peerReview.getExternalIdentifiers().getWorkExternalIdentifier().add(pExtId);
+        
+        postResponse = memberV2ApiClient.createPeerReviewXml(user1OrcidId, peerReview, accessToken);
+        assertNotNull(postResponse);
+        assertEquals(Response.Status.CREATED.getStatusCode(), postResponse.getStatus());
+    }
+
     public String getAccessToken(ScopePathType scope) throws InterruptedException, JSONException {
         String accessToken = super.getAccessToken(scope.value());
         return accessToken;
