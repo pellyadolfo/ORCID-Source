@@ -19,9 +19,9 @@ XML for the ```ADD_ACTIVITIES``` notifications follows the [notification-add-act
 
 Consists of one or more ```notification:activity``` elements, which contain the following sub-elements:
 
-- **notification:activity-type**: The type of ORCID activity represented by this ```activity``` element. Choosen from the following: ```EDUCATION```, ```EMPLOYMENT```, ```FUNDING```, or ```WORK```.
+- **notification:activity-type**: The type of ORCID activity represented by this ```activity``` element. Chosen from the following: ```EDUCATION```, ```EMPLOYMENT```, ```FUNDING```, or ```WORK```.
 
-- **notification:activity-name**: DISPLAYED TO END USER. The name that should be shown to the end user to describe the activity. This field is usually the name of the activity that might be added once permission is granted (for example, the title of an article), but it also could include other identifying information, for example, _"Article Title (as published in journal ABC)"_, where "(as published in journal ABC)" is additional infomration that the client application would like to present to the user.
+- **notification:activity-name**: DISPLAYED TO END USER. The name that should be shown to the end user to describe the activity. This field is usually the name of the activity that might be added once permission is granted (for example, the title of an article), but it also could include other identifying information, for example, _"Article Title (as published in journal ABC)"_, where "(as published in journal ABC)" is additional information that the client application would like to present to the user.
 
 - **notification:external-identifier**: DISPLAYED TO END USER. An external identifier for the activity. While this field is not required, it is very helpful information to provide to the end user, as it distinguishes the activity from others that may be similar. Note that, when adding the activity to the ORCID record, at least one external identifier is required, even if an internal reference identifier is used for this purpose. 
 
@@ -30,9 +30,9 @@ For an example XML file, see [notification-add-activities-2.0_rc1.xml](https://g
 ***Note:*** *Sample files contain system-generated elements/attributes that are returned when reading items from ORCID. The following items should not be included when posting items to ORCID. These fields will be present when reading notifications using this API:*
 
 - **put-code** - ORCID_internal identifier for this notification. _(exception: you must include the put-code when updating items using the PUT method to update an item previously added)_
-- **source** - the system will inlcude your client application as the source
+- **source** - the system will include your client application as the source
 - **created-date** - date that you created this notification; automatically assigned by the system
-- **sent-date** - date that the notification was sent to the end user from the inbox _(note that usually inbox messages are sent in batch to the uesr at an interval that the user specifies.)_
+- **sent-date** - date that the notification was sent to the end user from the inbox _(note that usually inbox messages are sent in batch to the user at an interval that the user specifies.)_
 - **read-date** - date that the user read your notification in the ORCID Inbox, OR took action on the notification sent through the users email
 - **archived-date** - date that the user archived your notification
 
