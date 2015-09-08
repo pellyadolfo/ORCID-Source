@@ -137,17 +137,20 @@ public class OrcidUrlManager {
     }
 
     public String getServerStringWithContextPath(HttpServletRequest request) {
-        String forwardedProto = request.getHeader("X-Forwarded-Proto");
-        String scheme = forwardedProto != null ? forwardedProto : request.getScheme();
-
         StringBuilder sb = new StringBuilder();
 
-        if (scheme.equals("https"))
+        if (isSecure(request))
         	sb.append(getBaseUrl());
         else
         	sb.append(getBaseUriHttp());
         return sb.toString();
     }
+
+	public boolean isSecure(HttpServletRequest request) {
+		String forwardedProto = request.getHeader("X-Forwarded-Proto");
+        String scheme = forwardedProto != null ? forwardedProto : request.getScheme();
+		return scheme.equals("https");
+	}
     
     public static String getPathWithoutContextPath(HttpServletRequest request) {
         return request.getRequestURI().substring(request.getContextPath().length());

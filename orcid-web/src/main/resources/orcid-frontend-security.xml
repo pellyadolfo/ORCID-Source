@@ -274,7 +274,7 @@
 		<!-- username-parameter="userId" password-parameter="password" default-target-url="/my-orcid"/> -->
 
 		<sec:logout logout-success-url="/signin" logout-url="/signout"
-			invalidate-session="true" />
+			invalidate-session="true" delete-cookies="sso"/>
 
 		<sec:form-login login-processing-url="/signin/auth.json"
 			login-page="/signin" authentication-success-handler-ref="ajaxAuthenticationSuccessHandler"
