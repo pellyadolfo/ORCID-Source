@@ -70,9 +70,8 @@ public class AjaxAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 	}
 
 	private void addSSOCookie(HttpServletRequest request, HttpServletResponse response, String orcidId, Date lastModified) {
-		byte[] b = new byte[16];
-		ThreadLocalRandom.current().nextBytes(b);
-		Cookie sso = new Cookie("sso", orcidId + ":" + Base64.encodeBase64URLSafeString(b) + ":" + lastModified.getTime());
+        // Get cookie from SSO Manger 
+		Cookie sso = new Cookie("sso", "SSO Token goes here");
 		if (!orcidUrlManager.getBaseHost().equals("localhost"))
 			sso.setDomain("." + orcidUrlManager.getBaseHost());
 		sso.setMaxAge(300);
