@@ -14,16 +14,17 @@
  *
  * =============================================================================
  */
-package org.orcid.jaxb.model.notification.addactivities;
+package org.orcid.core.manager;
 
-import javax.xml.bind.annotation.XmlEnum;
+import org.orcid.jaxb.model.notification.permission.NotificationPermission;
 
 /**
  * 
  * @author Will Simpson
- *
+ * 
  */
-@XmlEnum
-public enum ActivityType {
-    EDUCATION, EMPLOYMENT, FUNDING, WORK, ;
+public interface NotificationValidationManager {
+
+    void validateNotificationPermission(NotificationPermission notification);
+
 }
