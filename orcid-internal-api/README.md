@@ -14,7 +14,7 @@ The ORCID-INTERNAL-API is intended to be used for internal ORCID apps, so, only 
 
 1. Get the token: 
 
-``curl -i -L -k -H 'Accept: application/json' -d 'client_id=<CLIENT_ID>' -d 'client_secret=<CLIENT_SECRET>' -d 'scope=/orcid-internal/person/read' -d 'grant_type=client_credentials' 'http://localhost:8080/orcid-internal-api/oauth/token'``
+``curl -i -L -k -H 'Accept: application/json' -d 'client_id=<CLIENT_ID>' -d 'client_secret=<CLIENT_SECRET>' -d 'scope=/orcid-internal/person/last_modified' -d 'grant_type=client_credentials' 'http://localhost:8080/orcid-internal-api/oauth/token'``
 
 2. Use the token to get user info
 
