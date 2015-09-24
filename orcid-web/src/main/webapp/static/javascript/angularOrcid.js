@@ -5639,11 +5639,7 @@ orcidNgModule.factory("peerReviewSrvc", ['$rootScope', function ($rootScope) {
                 }
                 return count;
             },
-            getPeerReviewGroupDetails: function(groupIDvalue, putCode){
-            	var group = peerReviewSrvc.getGroup(putCode);
-            	
-            	console.log(getBaseUri() + '/public/group/' + groupIDvalue);
-            	
+            getPeerReviewGroupDetails: function(groupIDvalue, putCode){            	
             	$.ajax({
                     url: getBaseUri() + '/public/group/' + groupIDvalue,
                     dataType: 'json',
@@ -5651,14 +5647,14 @@ orcidNgModule.factory("peerReviewSrvc", ['$rootScope', function ($rootScope) {
                     type: 'GET',
                     success: function(data) {
                     	$rootScope.$apply(function(){
+                    		var group = peerReviewSrvc.getGroup(putCode);
                     		group.groupName = data.name;
                     		group.groupDescription = data.description;
                     		group.groupType = data.type;
                     	});
                     }
                 }).fail(function(xhr, status, error){
-                    //console.log("error getPeerReviewGroupDetails(groupIDvalue, putCode)");
-                    console.log("Error: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
+                    console.log("error getPeerReviewGroupDetails(groupIDvalue, putCode)");                    
                 });
             }
     };
