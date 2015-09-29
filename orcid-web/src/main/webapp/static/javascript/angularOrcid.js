@@ -6202,6 +6202,22 @@ orcidNgModule.controller('ShibbolethCtrl',['$scope', '$compile', function Shibbo
             console.log("error getting shibboleth accounts");
         });
     };
+    
+    $scope.showShibbolethPopUp = function(){
+    	$.colorbox({
+            scrolling: true,
+            href: getBaseUri() + '/shibboleth/link', //Also tested with 'disco'
+            onLoad: function() {$('#cboxClose').remove();},
+            // start the colorbox off with the correct width
+            width: formColorBoxResize(),
+            onComplete: function() {
+                //resize to insure content fits
+            },
+            onClosed: function() {
+                
+            }
+        });
+    }
 
     $scope.closeModal = function() {
         $.colorbox.close();
