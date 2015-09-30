@@ -11,8 +11,7 @@ a, a:visited{
     text-decoration: none !important;
 }
 
-#idpSelectContainer{
-    border-top: 10px solid #A6CE39;
+#idpSelectContainer{    
     width: 413px;
     height: auto;
 }
@@ -290,7 +289,7 @@ div.IdPSelectDropDown div {
 }
 
 #idpSelectContainerFooter div{
-    height: 15px;
+    height: 20px;
     width: 100%;
 }
 
@@ -318,7 +317,7 @@ div.IdPSelectDropDown div {
     height: 20px;
     font-size: 10px;
     color: #FFF;
-    margin-top: 10px;
+    margin-top: 10px;    
     padding-top: 5px;
 }
 

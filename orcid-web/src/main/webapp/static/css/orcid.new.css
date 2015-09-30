@@ -6030,8 +6030,7 @@ ul.sources-edit-list > li.group-details{
 }
 
 .shibboleth-container{
-	max-width: 353px;
-	margin: 0 auto;	
+	max-width: 353px;		
 	padding-left: 15px;
 	padding-right: 15px; 
 }

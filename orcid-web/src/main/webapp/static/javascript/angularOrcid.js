@@ -6129,7 +6129,7 @@ orcidNgModule.controller('DelegatorsCtrl',['$scope', '$compile', function ($scop
 }]);
 
 //Controller for Shibboleth accounts
-orcidNgModule.controller('ShibbolethCtrl',['$scope', '$compile', function ShibbolethCtrl($scope, $compile){
+orcidNgModule.controller('ShibbolethCtrl',['$scope', '$compile', '$cookies',  function ShibbolethCtrl($scope, $compile, $cookies){
     $scope.showLoader = false;
     $scope.sort = {
         column: 'remoteUser',
@@ -6198,20 +6198,26 @@ orcidNgModule.controller('ShibbolethCtrl',['$scope', '$compile', function Shibbo
     };
     
     $scope.showShibbolethPopUp = function(){
-    	$.colorbox({
-            scrolling: true,
+    	$.colorbox({            
             href: getBaseUri() + '/shibboleth/link', //Also tested with 'disco'
-            onLoad: function() {$('#cboxClose').remove();},
-            // start the colorbox off with the correct width
-            width: formColorBoxResize(),
-            onComplete: function() {
-                //resize to insure content fits
+            scrolling: false,
+            iframe: true,            
+            onLoad: function() {
+            	$('#cboxClose').remove();
+            },            
+            onComplete: function() {           
+            	if(typeof($cookies._saml_idp) !== 'undefined'){
+            		$.colorbox.resize({width:'413px', height: '325px'});	
+            	}else{            		
+            		$.colorbox.resize({width:'413px', height: '187px'});
+            	}
             },
             onClosed: function() {
                 
             }
         });
-    }
+    }   
+    
 
     $scope.closeModal = function() {
         $.colorbox.close();

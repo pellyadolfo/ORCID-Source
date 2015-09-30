@@ -60,7 +60,7 @@
 	<#if (RequestParameters['shibboleth'])??>
         <div class="row">        	 
            <div class="control-group col-md-offset-3 col-md-9 col-sm-9 col-sm-offset-3 col-xs-12" ng-controller="ShibbolethCtrl">
-				<a class="iframe cboxElement" ng-click="showShibbolethPopUp()">${springMacroRequestContext.getMessage("login.shibboleth")}</a>
+				<a ng-click="showShibbolethPopUp()">${springMacroRequestContext.getMessage("login.shibboleth")}</a>
 				<!-- href="<@orcid.rootPath '/shibboleth/link'/>" -->    
            </div>
         </div>
