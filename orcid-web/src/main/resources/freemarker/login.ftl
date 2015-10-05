@@ -57,12 +57,18 @@
 			    <div id="login-reset">
 			        <a href="<@orcid.rootPath '/reset-password'/>">${springMacroRequestContext.getMessage("login.reset")}</a>&nbsp;&nbsp;
 			    </div>
-			    <div id="login-register">
-			       	<a class="reg" href="<@orcid.rootPath '/register'/>">${springMacroRequestContext.getMessage("login.register")}</a>
-			    </div>
+			    <#if (RequestParameters['fbd'])??>
+			    	<div id="login-register">
+			       		<a class="reg" href="http://orcid.github.io/fbd">${springMacroRequestContext.getMessage("login.register")}</a>
+			    	</div>
+				<#else>
+					<div id="login-register">
+			       		<a class="reg" href="<@orcid.rootPath '/register'/>">${springMacroRequestContext.getMessage("login.register")}</a>
+			    	</div>
+				</#if>			    
 		    </div>		    
 	    </div>
-	</form>
+	</form>	
 	<#if (RequestParameters['shibboleth'])??>
         <div class="row">        	 
            <div class="control-group col-md-offset-3 col-md-9 col-sm-9 col-sm-offset-3 col-xs-12">
