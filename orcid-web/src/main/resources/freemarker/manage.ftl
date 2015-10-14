@@ -68,73 +68,74 @@
                 <tr>
                 	
                     <!-- Email edit -->
-                    <td colspan="2" ng-controller="EmailEditCtrl" ng-show="showEditEmail" ng-cloak>
+                    <td colspan="2" ng-controller="EmailEditCtrl" ng-show="showEditEmail" class="email-edit" ng-cloak>
+                        
+                        
+                        
+                        
                         <div class="editTablePadCell35">
                             <!-- we should never see errors here, but just to be safe -->
                             <span class="orcid-error" ng-show="emailSrvc.emails.errors.length > 0">
                                 <span ng-repeat='error in emailSrvc.emails.errors'
                                 ng-bind-html="error"></span>
                             </span>
-                            <!-- Start -->
+                            
+                            
+                            
                             <div class="row">
                             	<strong class="green">${springMacroRequestContext.getMessage("manage.email.my_email_addresses")}</strong>
                             </div>
-                            <div ng-repeat="email in emailSrvc.emails.emails | orderBy:['value']" class="data-row-group">
-                            	
-                                <div class="row">
-                                    <!-- Primary Email -->
-                                    <div ng-class="{primaryEmail:email.primary}"
-                                        ng-bind="email.value" class="col-md-3 col-xs-12 email"></div>
-                                    <!-- Set Primary options -->
-                                    <div class="col-md-2 col-xs-12">
-                                        <span ng-hide="email.primary"> <a href=""
-                                            ng-click="emailSrvc.setPrimary(email)">${springMacroRequestContext.getMessage("manage.email.set_primary")}</a>
-                                        </span> <span ng-show="email.primary" class="muted"
-                                            style="color: #bd362f;">
-                                            ${springMacroRequestContext.getMessage("manage.email.primary_email")}
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="data-row-group">
-                                        <div class="col-md-3 col-xs-4">
-                                            <!-- Current -->
-                                            <div class="left">
-                                                <select style="width: 100px; margin: 0px;" ng-change="emailSrvc.saveEmail()" ng-model="email.current">
-                                                    <option value="true" ng-selected="email.current == true"><@orcid.msg 'manage.email.current.true' /></option>
-                                                    <option value="false" ng-selected="email.current == false"><@orcid.msg 'manage.email.current.false' /></option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 col-xs-4">
-                                            <!-- Email verified -->
-                                            <div class="email-verified left">
-                                                <span ng-hide="email.verified" class="left"><a href=""
-                                                    ng-click="verifyEmail(email)">${springMacroRequestContext.getMessage("manage.email.verify")}</a></span>
-                                                <span ng-show="email.verified" class="left">${springMacroRequestContext.getMessage("manage.email.verified")}</span>
-                                            </div>
-                                            <!-- Icon Trash / Privacy Settings -->
-                                            <div class="right">
-                                                <a href="" class="glyphicon glyphicon-trash grey"
-                                                    ng-show="email.primary == false"
-                                                    ng-click="confirmDeleteEmail(email)"></a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 col-xs-4">
-                                        
-                                            <div class="emailVisibility">
-	                                            <@orcid.privacyToggle3
-	                                            	angularModel="email.visibility"
-													questionClick="toggleClickPrivacyHelp(email.value)"
-													clickedClassCheck="{'popover-help-container-show':privacyHelp[email.value]==true}" 
-													publicClick="setPrivacy(email, 'PUBLIC', $event)" 
-								                  	limitedClick="setPrivacy(email, 'LIMITED', $event)" 
-								                  	privateClick="setPrivacy(email, 'PRIVATE', $event)" 
-								                  	elementId="email.value" />    
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
+                            
+                             
+                             
+                            <div class="table-responsive"> 
+	                            <table class="table">
+	                            	<tr ng-repeat="email in emailSrvc.emails.emails | orderBy:['value']">
+	                            		<td ng-class="{primaryEmail:email.primary}" class="email-cell" ng-bind="email.value"></td>
+	                            		<td>
+	                            			<span ng-hide="email.primary"> <a href=""
+								                ng-click="emailSrvc.setPrimary(email)">${springMacroRequestContext.getMessage("manage.email.set_primary")}</a>
+								            </span> <span ng-show="email.primary" class="muted"
+								                style="color: #bd362f;">
+								                ${springMacroRequestContext.getMessage("manage.email.primary_email")}
+								            </span>
+	                            		</td>
+	                            		<td>
+	                            			<select style="width: 100px; margin: 0px;" ng-change="emailSrvc.saveEmail()" ng-model="email.current">
+						                        <option value="true" ng-selected="email.current == true"><@orcid.msg 'manage.email.current.true' /></option>
+						                        <option value="false" ng-selected="email.current == false"><@orcid.msg 'manage.email.current.false' /></option>
+						                    </select>
+	                            		</td>
+	                            		<td>
+	                            			<span ng-hide="email.verified" class="left"><a href=""
+						                        ng-click="verifyEmail(email)">${springMacroRequestContext.getMessage("manage.email.verify")}</a></span>
+						                    <span ng-show="email.verified" class="left">${springMacroRequestContext.getMessage("manage.email.verified")}</span>
+	                            		</td>
+	                            		<td>
+	                            			<a href="" class="glyphicon glyphicon-trash grey"
+                        						ng-show="email.primary == false"
+                        						ng-click="confirmDeleteEmail(email)"></a>
+	                            		</td>
+	                            		<td>
+	                            			<div class="emailVisibility pull-right">
+							                    <@orcid.privacyToggle3
+							                        angularModel="email.visibility"
+							                        questionClick="toggleClickPrivacyHelp(email.value)"
+							                        clickedClassCheck="{'popover-help-container-show':privacyHelp[email.value]==true}" 
+							                        publicClick="setPrivacy(email, 'PUBLIC', $event)" 
+							                        limitedClick="setPrivacy(email, 'LIMITED', $event)" 
+							                        privateClick="setPrivacy(email, 'PRIVATE', $event)" 
+							                        elementId="email.value" />    
+							                </div>
+	                            		</td>
+	                            	</tr>
+	                            </table>
+	                        </div>
+                           
+                           
+                           
+                           
                             <div class="row bottom-row">
                                     <div class="col-md-12 add-email">
                                         <input type="email" placeholder="${springMacroRequestContext.getMessage("manage.add_another_email")}"
@@ -181,8 +182,7 @@
 								        </div>
 			                    	 </div>
                                  </#if>
-                            </div>
-                        </div>
+                            </div>                        
                     </td>
                 </tr>
                 <!-- Notifications -->

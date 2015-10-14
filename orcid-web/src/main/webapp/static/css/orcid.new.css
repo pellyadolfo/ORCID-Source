@@ -38,10 +38,6 @@ html {
 	height: 100%;
 }
 
-a{
-	word-break: break-all;
-}
-
 a:focus {
 	outline: thin dotted #333;
 	outline: 5px auto -webkit-focus-ring-color;
@@ -1173,9 +1169,7 @@ ul.privacyHelp li.private {
 	padding-left: 0;
 }
 
-.wrap,
-.editTablePadCell35 .email
-{
+.wrap{
 	word-break: break-all;
 }
 
@@ -6082,6 +6076,16 @@ a:hover .mozilla-badge{
 	font-size: 16px;
 	padding:0;
 }
+
+.email-edit .email-table{
+    max-width: 690px;
+    overflow-x: scroll;
+}
+
+.email-edit .email-table .email-cell{
+	word-break: break-all;
+}
+
 
 /* Media Queries */
 @media ( max-width : 767px) { /* Mobile */
