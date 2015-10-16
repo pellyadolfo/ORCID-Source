@@ -479,7 +479,7 @@ $(function() {
                         return false;
                     });
 
-    $('.delete-url').live('click', function(e) {
+    $('.delete-url').on('click', function(e) {
         e.preventDefault();
         $(this).closest('p').fadeOut(300, function() {
             $(this).closest('p').remove();
@@ -686,7 +686,7 @@ $(function() {
                     });
 
     // delgates
-    $('#searchForDelegatesForm').live(
+    $('#searchForDelegatesForm').on(
             'submit',
             function(e) {
                 e.preventDefault();
