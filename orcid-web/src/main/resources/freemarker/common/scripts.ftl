@@ -25,10 +25,19 @@ if (typeof jQuery == 'undefined') {
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
 <script type="text/javascript">
-if (typeof jQuery.ui == 'undefined') {
-    document.write(unescape("%3Cscript src='${staticCdn}/javascript/jqueryui/1.10.0/jquery-ui.min.js' type='text/javascript'%3E%3C/script%3E"));
-}
+	if (typeof jQuery.ui == 'undefined') {
+	    document.write(unescape("%3Cscript src='${staticCdn}/javascript/jqueryui/1.10.0/jquery-ui.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
 </script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-browser/0.0.8/jquery.browser.min.js"></script>
+
+<script type="text/javascript">
+	if (typeof $.browser == 'undefined') {
+		document.write(unescape("%3Cscript src='${staticCdn}/javascript/jquery/plugins/jquery.browser.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+</script>
+
 
 <script type="text/javascript" src="${staticCdn}/javascript/typeahead/0.9.3/typeahead.min.js"></script>
 
