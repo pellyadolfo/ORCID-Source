@@ -5744,8 +5744,15 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             url: getBaseUri()+'/admin-search/search.json?term=' + $scope.term + '&maxResults=' + 10,
             type: 'GET',
             dataType: 'json',
-            success: function(data){
-                console.log(angular.toJson(data));
+            headers: { Accept: 'application/json'},
+            success: function(data){                
+                if(data.entity != null && data.entity.orcidSearchResults != null && data.entity.orcidSearchResults.orcidSearchResult != null) {
+                    for(var result in data.entity.orcidSearchResults.orcidSearchResult) {
+                        console.log(result.orcidIdentifier.path);
+                    }
+                } else {
+                    console.log("There are no results");
+                }
             }
         }).fail(function(error) {
             // something bad is happening!
