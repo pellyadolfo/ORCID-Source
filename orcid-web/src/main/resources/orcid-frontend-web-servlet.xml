@@ -97,6 +97,5 @@
     <bean id="recaptchaVerifier" class="org.orcid.frontend.web.util.RecaptchaVerifier">
     	<constructor-arg value="${org.orcid.recaptcha.verify_url}" />
     	<constructor-arg value="${org.orcid.recaptcha.secret}" />
-    </bean>
-
+    </bean>	
 </beans>

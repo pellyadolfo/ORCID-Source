@@ -4002,6 +4002,9 @@ this.w3cLatexCharMap = {
     }
 
     exports.buildUrl = function(input) {
+        
+        console.log("On buildURL");
+        
         if (hasValue(input.text)) {
             var orcidId = extractOrcidId(input.text);
             if (orcidId) {

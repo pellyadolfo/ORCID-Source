@@ -5725,6 +5725,50 @@ orcidNgModule.factory("peerReviewSrvc", ['$rootScope', function ($rootScope) {
 }]);
 
 
+
+
+
+
+
+
+
+
+
+
+orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($scope, $compile){
+    $scope.searchResults = null;
+    $scope.term = "";
+    
+    $scope.getResults = function(){
+        $.ajax({
+            url: getBaseUri()+'/admin-search/search.json?term=' + $scope.term + '&maxResults=' + 10,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data){
+                console.log(angular.toJson(data));
+            }
+        }).fail(function(error) {
+            // something bad is happening!
+            console.log("Error on search");
+        });
+    };
+}]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 orcidNgModule.controller('SearchCtrl',['$scope', '$compile', function ($scope, $compile){
     $scope.hasErrors = false;
     $scope.results = new Array();

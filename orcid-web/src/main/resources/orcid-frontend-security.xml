@@ -295,6 +295,8 @@
 			access="ROLE_USER"/>
 		<sec:intercept-url pattern="/works/countries.json(\?.*)?" 
 			access="ROLE_USER"/>
+		<sec:intercept-url pattern="/admin-search/search.json(\?.*)?" 
+			access="ROLE_USER"/>
 		<sec:intercept-url pattern="/.*" access="ROLE_USER"/>  
 		
 		<!-- <sec:form-login authentication-failure-url="/signin" login-page="/signin" 
