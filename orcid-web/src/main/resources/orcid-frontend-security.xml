@@ -119,7 +119,7 @@
 	<sec:http pattern="/oauth/.*" access-denied-page="/oauth/signin"
 		access-decision-manager-ref="accessDecisionManager" create-session="ifRequired"
 		path-type="regex">
-		<sec:csrf/>
+		<!-- <sec:csrf/>  -->
 		<sec:intercept-url pattern="/oauth/login(\?.*)?"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<sec:intercept-url pattern="/oauth/signin(\?.*)?"
@@ -157,7 +157,7 @@
 	<sec:http pattern="/shibboleth/.*" access-denied-page="/shibboleth/signin"
 		access-decision-manager-ref="accessDecisionManager" create-session="ifRequired"
 		path-type="regex">
-		<sec:csrf/>
+		<!-- <sec:csrf/>  -->
 		<sec:intercept-url pattern="/shibboleth/signin(\?.*)?"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<sec:intercept-url pattern="/shibboleth/.*" access="ROLE_USER" />		
@@ -171,7 +171,7 @@
 	<sec:http pattern="/social/.*" access-denied-page="/signin"
 		access-decision-manager-ref="accessDecisionManager" create-session="ifRequired"
 		path-type="regex">
-		<sec:csrf/>
+		<!-- <sec:csrf/>  -->
 		<sec:intercept-url pattern="/social/access(\?.*)?"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<sec:intercept-url pattern="/social/.*" access="ROLE_USER" />		
@@ -184,7 +184,7 @@
 	<sec:http access-denied-page="/signin"
 		access-decision-manager-ref="accessDecisionManager" create-session="ifRequired"
 		path-type="regex">
-		<sec:csrf/>
+		<!-- <sec:csrf/>  -->
 		<sec:custom-filter position="SWITCH_USER_FILTER" ref="switchUserProcessingFilter" />
 		<sec:intercept-url pattern="/statistics/liveids.json(\?.*)?"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
