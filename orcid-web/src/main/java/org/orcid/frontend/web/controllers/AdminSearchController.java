@@ -94,15 +94,18 @@ public class AdminSearchController extends BaseController {
             orcidSearchResults.setNumFound(orcidMessage.getOrcidSearchResults().getNumFound());
             if (searchResults.size() > 0) {
                 for (OrcidSearchResult searchResult : searchResults) {
-                    OrcidSearchResult filteredSearchResult = new OrcidSearchResult();
-                    OrcidProfile filteredProfile = new OrcidProfile();
-                    filteredSearchResult.setRelevancyScore(searchResult.getRelevancyScore());
-                    filteredProfile.setOrcid(searchResult.getOrcidProfile().getOrcid());
-                    filteredProfile.setOrcidId(searchResult.getOrcidProfile().getOrcidId());
-                    filteredProfile.setOrcidIdentifier(searchResult.getOrcidProfile().getOrcidIdentifier());
-                    filteredProfile.setOrcidBio(searchResult.getOrcidProfile().getOrcidBio());
-                    filteredSearchResult.setOrcidProfile(filteredProfile);
-                    filteredResults.add(filteredSearchResult);
+                    //Dont include reviewed profiles
+                    if(!searchResult.getOrcidProfile().isReviewed()) {
+                        OrcidSearchResult filteredSearchResult = new OrcidSearchResult();
+                        OrcidProfile filteredProfile = new OrcidProfile();
+                        filteredSearchResult.setRelevancyScore(searchResult.getRelevancyScore());
+                        filteredProfile.setOrcid(searchResult.getOrcidProfile().getOrcid());
+                        filteredProfile.setOrcidId(searchResult.getOrcidProfile().getOrcidId());
+                        filteredProfile.setOrcidIdentifier(searchResult.getOrcidProfile().getOrcidIdentifier());
+                        filteredProfile.setOrcidBio(searchResult.getOrcidProfile().getOrcidBio());                        
+                        filteredSearchResult.setOrcidProfile(filteredProfile);
+                        filteredResults.add(filteredSearchResult);
+                    }                    
                 }
             }
         }
