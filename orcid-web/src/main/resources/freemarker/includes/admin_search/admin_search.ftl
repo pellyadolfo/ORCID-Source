@@ -19,10 +19,19 @@
 <@public classes=['home'] >
 <div ng-controller="AdminSearchCtrl" id="AdminSearchCtrl">
 	<div class="row">
-		<div class="col-md-offset-3 col-md-9 col-sm-offset-3 col-sm-offset-9 col-xs-12">
-				
-				<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
-				<button class="btn btn-primary" id="search" ng-click="getResults()">Search</button>
+		<div class="col-md-offset-3 col-md-9 col-xs-12">
+								
+				<div class="row">
+					<div class="col-md-12">
+						<h2>Admin search tool</h2>
+				    	<div class="input-group input-group">
+				      		<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
+				      		<span class="input-group-btn">
+				        		<button class="btn btn-primary input-sm" id="search" ng-click="getResults()">Search</button>
+				      		</span>
+				    	</div>
+				  	</div>
+				</div>
 			
 				<!-- RESULTS -->
 				<div ng-show="searchResults != null">
