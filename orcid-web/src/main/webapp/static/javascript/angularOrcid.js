@@ -5738,6 +5738,8 @@ orcidNgModule.factory("peerReviewSrvc", ['$rootScope', function ($rootScope) {
 orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($scope, $compile){
     $scope.searchResults = null;
     $scope.term = "";
+    $scope.toLock = "";
+    $scope.toReview = "";
     
     $scope.getResults = function(){
         $.ajax({
@@ -5753,6 +5755,37 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             console.log("Error on search");
         });
     };
+    
+    $scope.lockResult = function() {
+    	$.ajax({
+    		url: getBaseUri()+'/admin-search/lock.json?orcid=' + $scope.toLock,
+            type: 'GET',
+            dataType: 'json',
+            headers: { Accept: 'application/json'},
+            success: function(data){   
+            	console.log(data);     
+            	$scope.toLock = "";
+            }
+    	}).fail(function(error){
+    		console.log("Couldnt lock account");
+    	});
+    };
+    
+    $scope.reviewResult = function() {
+    	$.ajax({
+    		url: getBaseUri()+'/admin-search/review.json?orcid=' + $scope.toReview,
+            type: 'GET',
+            dataType: 'json',
+            headers: { Accept: 'application/json'},
+            success: function(data){   
+            	console.log(data);
+            	$scope.toReview = "";
+            }
+    	}).fail(function(error){
+    		console.log("Couldnt review account");
+    	});
+    };
+    
 }]);
 
 

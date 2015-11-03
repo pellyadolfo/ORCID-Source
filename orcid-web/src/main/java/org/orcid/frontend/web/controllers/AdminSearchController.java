@@ -101,8 +101,7 @@ public class AdminSearchController extends BaseController {
                     if(!searchResult.getOrcidProfile().isReviewed()) {
                         OrcidSearchResult filteredSearchResult = new OrcidSearchResult();
                         OrcidProfile filteredProfile = new OrcidProfile();
-                        filteredSearchResult.setRelevancyScore(searchResult.getRelevancyScore());
-                        filteredProfile.setOrcid(searchResult.getOrcidProfile().getOrcid());
+                        filteredSearchResult.setRelevancyScore(searchResult.getRelevancyScore());                      
                         filteredProfile.setOrcidId(searchResult.getOrcidProfile().getOrcidId());
                         filteredProfile.setOrcidIdentifier(searchResult.getOrcidProfile().getOrcidIdentifier());
                         filteredProfile.setOrcidBio(searchResult.getOrcidProfile().getOrcidBio());                        
