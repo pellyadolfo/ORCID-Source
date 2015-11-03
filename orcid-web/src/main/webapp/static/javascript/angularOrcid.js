@@ -5745,14 +5745,8 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             type: 'GET',
             dataType: 'json',
             headers: { Accept: 'application/json'},
-            success: function(data){                
-                if(data.entity != null && data.entity.orcidSearchResults != null && data.entity.orcidSearchResults.orcidSearchResult != null) {
-                    for(var result in data.entity.orcidSearchResults.orcidSearchResult) {
-                        console.log(result.orcidIdentifier.path);
-                    }
-                } else {
-                    console.log("There are no results");
-                }
+            success: function(data){   
+            	console.log(angular.toJson(data))            	
             }
         }).fail(function(error) {
             // something bad is happening!
