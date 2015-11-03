@@ -32,12 +32,12 @@ import javax.ws.rs.core.Response;
 import org.orcid.core.locale.LocaleManager;
 import org.orcid.core.manager.LoadOptions;
 import org.orcid.core.manager.OrcidSearchManager;
+import org.orcid.core.manager.ProfileEntityManager;
 import org.orcid.jaxb.model.message.OrcidMessage;
 import org.orcid.jaxb.model.message.OrcidProfile;
 import org.orcid.jaxb.model.message.OrcidSearchResult;
 import org.orcid.jaxb.model.message.OrcidSearchResults;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +55,9 @@ public class AdminSearchController extends BaseController {
     @Resource(name = "orcidSearchManagerReadOnly")
     private OrcidSearchManager orcidSearchManagerReadOnly;
         
+    @Resource
+    ProfileEntityManager profileEntityManager;
+    
     @Resource 
     private LocaleManager localeManager;
     
@@ -115,5 +118,23 @@ public class AdminSearchController extends BaseController {
         result.setMessageVersion("1.2");
         result.setOrcidSearchResults(orcidSearchResults);
         return Response.ok(result).build();        
+    }
+    
+    @Produces(value = { VND_ORCID_JSON, ORCID_JSON, MediaType.APPLICATION_JSON })
+    @RequestMapping(value = { "/lock.json" }, method = RequestMethod.GET)
+    public @ResponseBody String lockProfile(@RequestParam("orcid") String orcid) {
+    	if (profileEntityManager.lockProfile(orcid)) {
+            return getMessage("admin.lock_profile.success", orcid);
+        }
+        return getMessage("admin.lock_profile.error.couldnt_lock_account", orcid);
+    }
+    
+    @Produces(value = { VND_ORCID_JSON, ORCID_JSON, MediaType.APPLICATION_JSON })
+    @RequestMapping(value = { "/review.json" }, method = RequestMethod.GET)
+    public @ResponseBody String reviewProfile(@RequestParam("orcid") String orcid) {
+    	if (profileEntityManager.reviewProfile(orcid)) {
+            return getMessage("admin.review_profile.success", orcid);
+        }
+        return getMessage("admin.review_profile.error.couldnt_review_account", orcid);
     }
 }
