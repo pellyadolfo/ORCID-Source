@@ -5736,10 +5736,23 @@ orcidNgModule.factory("peerReviewSrvc", ['$rootScope', function ($rootScope) {
 
 
 orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($scope, $compile){
-    $scope.searchResults = null;
+    
+	
+	$scope.searchResults = null;
     $scope.term = "";
     $scope.toLock = "";
     $scope.toReview = "";
+    
+    
+    
+    
+    
+    //Remove this
+    //$scope.data = [{"statusType":"OK","entity":{"messageVersion":"1.2","orcidProfile":null,"orcidSearchResults":{"numFound":3,"orcidSearchResult":[{"relevancyScore":{"value":0.19178301},"orcidProfile":{"orcid":null,"orcidId":null,"orcidIdentifier":{"uri":"http://localhost:8080/orcid-web/0000-0002-6838-4552","path":"0000-0002-6838-4552","host":"localhost","value":null,"valueAsString":null},"orcidDeprecated":null,"orcidPreferences":null,"orcidHistory":null,"orcidBio":{"personalDetails":{"givenNames":{"content":"One"},"familyName":null,"creditName":null,"otherNames":{"otherName":[],"visibility":"PUBLIC","otherNamesAsStrings":[]}},"biography":{"content":"Madrid","visibility":"PUBLIC"},"researcherUrls":{"researcherUrl":[],"visibility":"PUBLIC"},"contactDetails":null,"keywords":null,"externalIdentifiers":{"externalIdentifier":[],"visibility":"PUBLIC"},"delegation":null,"scope":null},"orcidActivities":null,"orcidInternal":null,"type":"USER","groupType":null,"clientType":null,"password":null,"verificationCode":null,"securityQuestionAnswer":null,"releaseName":"2015-11-03T16:12:13.917-06:00","locked":false,"userLastIp":null,"reviewed":false,"countTokens":0,"cacheKey":"0000-0002-6838-4552_no-last-modified_2015-11-03T16:12:13.917-06:00","deactivated":false}},{"relevancyScore":{"value":0.19178301},"orcidProfile":{"orcid":null,"orcidId":null,"orcidIdentifier":{"uri":"http://localhost:8080/orcid-web/0000-0002-6838-4552","path":"0000-0002-6838-4552","host":"localhost","value":null,"valueAsString":null},"orcidDeprecated":null,"orcidPreferences":null,"orcidHistory":null,"orcidBio":{"personalDetails":{"givenNames":{"content":"One"},"familyName":null,"creditName":null,"otherNames":{"otherName":[],"visibility":"PUBLIC","otherNamesAsStrings":[]}},"biography":{"content":"Madrid","visibility":"PUBLIC"},"researcherUrls":{"researcherUrl":[],"visibility":"PUBLIC"},"contactDetails":null,"keywords":null,"externalIdentifiers":{"externalIdentifier":[],"visibility":"PUBLIC"},"delegation":null,"scope":null},"orcidActivities":null,"orcidInternal":null,"type":"USER","groupType":null,"clientType":null,"password":null,"verificationCode":null,"securityQuestionAnswer":null,"releaseName":"2015-11-03T16:12:13.917-06:00","locked":false,"userLastIp":null,"reviewed":false,"countTokens":0,"cacheKey":"0000-0002-6838-4552_no-last-modified_2015-11-03T16:12:13.917-06:00","deactivated":false}},{"relevancyScore":{"value":0.19178301},"orcidProfile":{"orcid":null,"orcidId":null,"orcidIdentifier":{"uri":"http://localhost:8080/orcid-web/0000-0002-6838-4552","path":"0000-0002-6838-4552","host":"localhost","value":null,"valueAsString":null},"orcidDeprecated":null,"orcidPreferences":null,"orcidHistory":null,"orcidBio":{"personalDetails":{"givenNames":{"content":"One"},"familyName":null,"creditName":null,"otherNames":{"otherName":[],"visibility":"PUBLIC","otherNamesAsStrings":[]}},"biography":{"content":"Madrid","visibility":"PUBLIC"},"researcherUrls":{"researcherUrl":[],"visibility":"PUBLIC"},"contactDetails":null,"keywords":null,"externalIdentifiers":{"externalIdentifier":[],"visibility":"PUBLIC"},"delegation":null,"scope":null},"orcidActivities":null,"orcidInternal":null,"type":"USER","groupType":null,"clientType":null,"password":null,"verificationCode":null,"securityQuestionAnswer":null,"releaseName":"2015-11-03T16:12:13.917-06:00","locked":false,"userLastIp":null,"reviewed":false,"countTokens":0,"cacheKey":"0000-0002-6838-4552_no-last-modified_2015-11-03T16:12:13.917-06:00","deactivated":false}}]},"errorDesc":null},"entityType":"org.orcid.jaxb.model.message.OrcidMessage","status":200,"metadata":{}}];
+    //$scope.searchResults = $scope.data['0'].entity.orcidSearchResults;
+    //Remove this
+    
+    
     
     $scope.getResults = function(){
         $.ajax({
@@ -5747,8 +5760,8 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             type: 'GET',
             dataType: 'json',
             headers: { Accept: 'application/json'},
-            success: function(data){   
-            	console.log(angular.toJson(data))            	
+            success: function(data){
+            	$scope.searchResults = data['0'].entity.orcidSearchResults;	
             }
         }).fail(function(error) {
             // something bad is happening!
