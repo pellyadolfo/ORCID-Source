@@ -43,6 +43,7 @@
 							<th>${springMacroRequestContext.getMessage("search_results.thORCIDID")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thGivenname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thFamilynames")}</th>
+							<th>${springMacroRequestContext.getMessage("search_results.thCreditname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thOthernames")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thBiography")}</th>
 						</tr>
@@ -56,6 +57,11 @@
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>
+									<td>
+										<span ng-repeat='otherName in result.orcidProfile.orcidBio.personalDetails.otherNames.otherName'>
+											{{otherName.content}}
+										</span>
+									</td>									
 									<td>{{result.orcidProfile.orcidBio.biography.content}}</td>
 								
 							</tr>

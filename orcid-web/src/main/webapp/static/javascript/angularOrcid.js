@@ -5761,7 +5761,7 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             dataType: 'json',
             headers: { Accept: 'application/json'},
             success: function(data){
-            	console.log(data)
+            	console.log(angular.toJson(data))
             	$scope.searchResults = data.entity.orcidSearchResults;
             	$scope.$apply();
             }
