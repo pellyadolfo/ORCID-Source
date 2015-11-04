@@ -5747,6 +5747,7 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     $scope.hideRow = [];
     
     $scope.getResults = function(){
+    	$scope.hideRow = []; //Reseting rows that have been deleted
         $.ajax({
             url: getBaseUri()+'/admin-search/search.json?term=' + $scope.term + '&maxResults=' + 10,
             type: 'GET',
