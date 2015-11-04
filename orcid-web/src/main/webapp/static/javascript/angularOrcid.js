@@ -5820,20 +5820,6 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
 }]);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 orcidNgModule.controller('SearchCtrl',['$scope', '$compile', function ($scope, $compile){
     $scope.hasErrors = false;
     $scope.results = new Array();

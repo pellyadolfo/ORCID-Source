@@ -24,13 +24,15 @@
 				<div class="row">
 					<div class="col-md-12">
 						<h2>Admin search tool</h2>
-				    	<div class="input-group input-group">
-				      		<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
-				      		<span class="input-group-btn">
-				        		<button class="btn btn-primary input-sm" id="search" ng-click="getResults()">Search</button>
-				        		<button class="btn btn-primary input-sm" id="clear" ng-click="cleanResults()">Clear</button>
-				      		</span>
-				    	</div>
+						<form fnForm="getResults()">
+				    		<div class="input-group input-group">	
+					      		<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
+					      		<span class="input-group-btn">
+					        		<button class="btn btn-primary input-sm" id="search" ng-click="getResults()">Search</button>
+					        		<button class="btn btn-primary input-sm" id="clear" ng-click="cleanResults()">Clear</button>
+					      		</span>
+							</div>      	
+				    	</form>
 				  	</div>
 				</div>
 				
