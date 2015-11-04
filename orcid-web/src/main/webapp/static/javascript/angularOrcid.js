@@ -5736,25 +5736,15 @@ orcidNgModule.factory("peerReviewSrvc", ['$rootScope', function ($rootScope) {
 
 
 orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($scope, $compile){
-    
-	
 	$scope.searchResults = null;
     $scope.term = "";
     $scope.toLock = "";
     $scope.toReview = "";
-    $scope.selectedAll = false;
-    $scope.item = [];
-    
-    
-    
-    
-    
-    //Remove this
-    //$scope.data = [{"statusType":"OK","entity":{"messageVersion":"1.2","orcidProfile":null,"orcidSearchResults":{"numFound":3,"orcidSearchResult":[{"relevancyScore":{"value":0.19178301},"orcidProfile":{"orcid":null,"orcidId":null,"orcidIdentifier":{"uri":"http://localhost:8080/orcid-web/0000-0002-6838-4552","path":"0000-0002-6838-4552","host":"localhost","value":null,"valueAsString":null},"orcidDeprecated":null,"orcidPreferences":null,"orcidHistory":null,"orcidBio":{"personalDetails":{"givenNames":{"content":"One"},"familyName":null,"creditName":null,"otherNames":{"otherName":[],"visibility":"PUBLIC","otherNamesAsStrings":[]}},"biography":{"content":"Madrid","visibility":"PUBLIC"},"researcherUrls":{"researcherUrl":[],"visibility":"PUBLIC"},"contactDetails":null,"keywords":null,"externalIdentifiers":{"externalIdentifier":[],"visibility":"PUBLIC"},"delegation":null,"scope":null},"orcidActivities":null,"orcidInternal":null,"type":"USER","groupType":null,"clientType":null,"password":null,"verificationCode":null,"securityQuestionAnswer":null,"releaseName":"2015-11-03T16:12:13.917-06:00","locked":false,"userLastIp":null,"reviewed":false,"countTokens":0,"cacheKey":"0000-0002-6838-4552_no-last-modified_2015-11-03T16:12:13.917-06:00","deactivated":false}},{"relevancyScore":{"value":0.19178301},"orcidProfile":{"orcid":null,"orcidId":null,"orcidIdentifier":{"uri":"http://localhost:8080/orcid-web/0000-0002-6838-4552","path":"0000-0002-6838-4552","host":"localhost","value":null,"valueAsString":null},"orcidDeprecated":null,"orcidPreferences":null,"orcidHistory":null,"orcidBio":{"personalDetails":{"givenNames":{"content":"One"},"familyName":null,"creditName":null,"otherNames":{"otherName":[],"visibility":"PUBLIC","otherNamesAsStrings":[]}},"biography":{"content":"Madrid","visibility":"PUBLIC"},"researcherUrls":{"researcherUrl":[],"visibility":"PUBLIC"},"contactDetails":null,"keywords":null,"externalIdentifiers":{"externalIdentifier":[],"visibility":"PUBLIC"},"delegation":null,"scope":null},"orcidActivities":null,"orcidInternal":null,"type":"USER","groupType":null,"clientType":null,"password":null,"verificationCode":null,"securityQuestionAnswer":null,"releaseName":"2015-11-03T16:12:13.917-06:00","locked":false,"userLastIp":null,"reviewed":false,"countTokens":0,"cacheKey":"0000-0002-6838-4552_no-last-modified_2015-11-03T16:12:13.917-06:00","deactivated":false}},{"relevancyScore":{"value":0.19178301},"orcidProfile":{"orcid":null,"orcidId":null,"orcidIdentifier":{"uri":"http://localhost:8080/orcid-web/0000-0002-6838-4552","path":"0000-0002-6838-4552","host":"localhost","value":null,"valueAsString":null},"orcidDeprecated":null,"orcidPreferences":null,"orcidHistory":null,"orcidBio":{"personalDetails":{"givenNames":{"content":"One"},"familyName":null,"creditName":null,"otherNames":{"otherName":[],"visibility":"PUBLIC","otherNamesAsStrings":[]}},"biography":{"content":"Madrid","visibility":"PUBLIC"},"researcherUrls":{"researcherUrl":[],"visibility":"PUBLIC"},"contactDetails":null,"keywords":null,"externalIdentifiers":{"externalIdentifier":[],"visibility":"PUBLIC"},"delegation":null,"scope":null},"orcidActivities":null,"orcidInternal":null,"type":"USER","groupType":null,"clientType":null,"password":null,"verificationCode":null,"securityQuestionAnswer":null,"releaseName":"2015-11-03T16:12:13.917-06:00","locked":false,"userLastIp":null,"reviewed":false,"countTokens":0,"cacheKey":"0000-0002-6838-4552_no-last-modified_2015-11-03T16:12:13.917-06:00","deactivated":false}}]},"errorDesc":null},"entityType":"org.orcid.jaxb.model.message.OrcidMessage","status":200,"metadata":{}}];
-    //$scope.searchResults = $scope.data['0'].entity.orcidSearchResults;
-    //Remove this
-    
-    
+    $scope.selectedAllLock = false;
+    $scope.selectedAllReview = false;
+    $scope.lockItem = [];
+    $scope.reviewItem = [];
+    $scope.hideRow = [];
     
     $scope.getResults = function(){
         $.ajax({
@@ -5763,8 +5753,9 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             dataType: 'json',
             headers: { Accept: 'application/json'},
             success: function(data){
-            	//console.log(angular.toJson(data))
+            	
             	$scope.searchResults = data.entity.orcidSearchResults;
+            	console.log($scope.searchResults);
             	$scope.$apply();
             }
         }).fail(function(error) {
@@ -5773,42 +5764,56 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
         });
     };
     
-    $scope.lockResult = function() {
+    $scope.lockResult = function(orcid, idx) {
+    	$scope.hideRow[idx] = false;
     	$.ajax({
-    		url: getBaseUri()+'/admin-search/lock.json?orcid=' + $scope.toLock,
+    		url: getBaseUri()+'/admin-search/lock.json?orcid=' + orcid,
             type: 'GET',
-            dataType: 'json',
-            headers: { Accept: 'application/json'},
+            dataType: 'text',
             success: function(data){   
-            	console.log(data);     
-            	$scope.toLock = "";
+            	console.log(data);
+            	$scope.hideRow[idx] = true;
+            	$scope.$apply();
             }
     	}).fail(function(error){
+    		console.log(error);
     		console.log("Couldnt lock account");
     	});
     };
     
-    $scope.reviewResult = function() {
+    $scope.reviewResult = function(orcid, idx) {
+    	console.log('Reviewing' + orcid);
     	$.ajax({
-    		url: getBaseUri()+'/admin-search/review.json?orcid=' + $scope.toReview,
+    		url: getBaseUri()+'/admin-search/review.json?orcid=' + orcid,
             type: 'GET',
-            dataType: 'json',
-            headers: { Accept: 'application/json'},
+            dataType: 'text',
             success: function(data){   
             	console.log(data);
-            	$scope.toReview = "";
+            	$scope.hideRow[idx] = true;
+            	$scope.$apply();
             }
     	}).fail(function(error){
     		console.log("Couldnt review account");
     	});
     };
     
-    $scope.checkAll = function () {
-        $scope.selectedAll = !$scope.selectedAll;    
+    $scope.checkAllLock = function () {
+        $scope.selectedAllLock = !$scope.selectedAllLock;    
         angular.forEach($scope.searchResults.orcidSearchResult, function (item) {
-        	item.Selected = $scope.selectedAll;
+        	item.SelectedLock = $scope.selectedAllLock;
         });
     };
+    
+    $scope.checkAllReview = function () {
+        $scope.selectedAllReview = !$scope.selectedAllReview;    
+        angular.forEach($scope.searchResults.orcidSearchResult, function (item) {
+        	item.SelectedReview = $scope.selectedAllReview;
+        });
+    };
+    
+    $scope.cleanResults = function(){
+    	$scope.searchResults.numFound = 0;
+    }
     
 }]);
 

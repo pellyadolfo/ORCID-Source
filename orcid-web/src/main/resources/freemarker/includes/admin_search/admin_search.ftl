@@ -28,6 +28,7 @@
 				      		<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
 				      		<span class="input-group-btn">
 				        		<button class="btn btn-primary input-sm" id="search" ng-click="getResults()">Search</button>
+				        		<button class="btn btn-primary input-sm" id="clear" ng-click="cleanResults()">Clear</button>
 				      		</span>
 				    	</div>
 				  	</div>
@@ -38,21 +39,20 @@
 					<h3 class="ng-cloak search-result-head">${springMacroRequestContext.getMessage("search_results.h3Searchresults")}</h3>
 					<table class="ng-cloak table table-striped">
 						<thead>
+
 						<tr>
-							<th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()"/></th>
 							<th>${springMacroRequestContext.getMessage("search_results.thORCIDID")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thGivenname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thFamilynames")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thCreditname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thOthernames")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thBiography")}</th>
+							<th>Lock <!-- <label>Lock</label><input type="checkbox" ng-model="selectedAllLock" ng-click="checkAllLock()"/> --></th>
+							<th>Review <!--<label for="">Review</label><input type="checkbox" ng-model="selectedAllReview" ng-click="checkAllReview()"/>--></th>
 						</tr>
 						</thead>
-						<tbody>
-							<tr>
-							</tr>
-							<tr ng-repeat='result in searchResults.orcidSearchResult'>
-									<td><input type="checkbox" value="{{$index}}" ng-model="result.Selected"/></td>
+						<tbody ng-repeat='result in searchResults.orcidSearchResult' id='{{result.orcidProfile.orcidIdentifier.path}}'>
+							<tr ng-hide="hideRow[$index] == true">
 									<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
@@ -63,7 +63,8 @@
 										</span>
 									</td>									
 									<td>{{result.orcidProfile.orcidBio.biography.content}}</td>
-								
+									<td><input type="checkbox" value="{{$index}}" ng-click="lockResult(result.orcidProfile.orcidIdentifier.path, $index)" ng-model="result.SelectedLock"/></td>
+									<td><input type="checkbox" value="{{$index}}" ng-click="reviewResult(result.orcidProfile.orcidIdentifier.path, $index)" ng-model="result.SelectedReview"/></td>
 							</tr>
 						</tbody>
 					</table>

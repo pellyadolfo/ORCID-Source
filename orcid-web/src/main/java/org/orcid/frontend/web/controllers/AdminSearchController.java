@@ -118,8 +118,7 @@ public class AdminSearchController extends BaseController {
         result.setOrcidSearchResults(orcidSearchResults);
         return Response.ok(result).build();        
     }
-    
-    @Produces(value = { VND_ORCID_JSON, ORCID_JSON, MediaType.APPLICATION_JSON })
+        
     @RequestMapping(value = { "/lock.json" }, method = RequestMethod.GET)
     public @ResponseBody String lockProfile(@RequestParam("orcid") String orcid) {
     	if (profileEntityManager.lockProfile(orcid)) {
@@ -128,7 +127,6 @@ public class AdminSearchController extends BaseController {
         return getMessage("admin.lock_profile.error.couldnt_lock_account", orcid);
     }
     
-    @Produces(value = { VND_ORCID_JSON, ORCID_JSON, MediaType.APPLICATION_JSON })
     @RequestMapping(value = { "/review.json" }, method = RequestMethod.GET)
     public @ResponseBody String reviewProfile(@RequestParam("orcid") String orcid) {
     	if (profileEntityManager.reviewProfile(orcid)) {
