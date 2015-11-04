@@ -18,19 +18,21 @@
 -->
 <@public classes=['home'] >
 <div ng-controller="AdminSearchCtrl" id="AdminSearchCtrl">
-	<div class="row">
+	<div class="row admin-search">
 		<div class="col-md-offset-3 col-md-9 col-xs-12">
 								
 				<div class="row">
 					<div class="col-md-12">
 						<h2>Admin search tool</h2>
-				    	<div class="input-group input-group">
-				      		<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
-				      		<span class="input-group-btn">
-				        		<button class="btn btn-primary input-sm" id="search" ng-click="getResults()">Search</button>
-				        		<button class="btn btn-primary input-sm" id="clear" ng-click="cleanResults()">Clear</button>
-				      		</span>
-				    	</div>
+						<form fnForm="getResults()">
+				    		<div class="input-group input-group">	
+					      		<input name="term" type="text" class="form-control" ng-model="term" placeholder="What are you looking for?">
+					      		<span class="input-group-btn">
+					        		<button class="btn btn-primary input-sm" id="search" ng-click="getResults()">Search</button>
+					        		<button class="btn btn-primary input-sm" id="clear" ng-click="cleanResults()">Clear</button>
+					      		</span>
+							</div>      	
+				    	</form>
 				  	</div>
 				</div>
 				
@@ -57,7 +59,7 @@
 						</thead>
 						<tbody ng-repeat='result in searchResults.orcidSearchResult' id='{{result.orcidProfile.orcidIdentifier.path}}'>
 							<tr ng-hide="hideRow[$index] == true">
-									<td><a href="./{{result.orcidProfile.orcidIdentifier.path}}" target="_blank">{{result.orcidProfile.orcidIdentifier.path}}</a></td>
+									<td class="orcid"><a href="./{{result.orcidProfile.orcidIdentifier.path}}" target="_blank">{{result.orcidProfile.orcidIdentifier.path}}</a></td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>

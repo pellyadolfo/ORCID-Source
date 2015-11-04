@@ -6147,6 +6147,10 @@ a:hover .mozilla-badge{
 	font-size: 18px;
 }
 
+.admin-search .orcid{
+	white-space: nowrap;
+}
+
 
 
 /* Media Queries */
