@@ -18,7 +18,7 @@
 -->
 <@public classes=['home'] >
 <div ng-controller="AdminSearchCtrl" id="AdminSearchCtrl">
-	<div class="row">
+	<div class="row admin-search">
 		<div class="col-md-offset-3 col-md-9 col-xs-12">
 								
 				<div class="row">
@@ -59,7 +59,7 @@
 						</thead>
 						<tbody ng-repeat='result in searchResults.orcidSearchResult' id='{{result.orcidProfile.orcidIdentifier.path}}'>
 							<tr ng-hide="hideRow[$index] == true">
-									<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
+									<td class="orcid">{{result.orcidProfile.orcidIdentifier.path}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>
