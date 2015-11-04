@@ -5761,7 +5761,9 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             dataType: 'json',
             headers: { Accept: 'application/json'},
             success: function(data){
-            	$scope.searchResults = data['0'].entity.orcidSearchResults;	
+            	console.log(data)
+            	$scope.searchResults = data.entity.orcidSearchResults;
+            	$scope.$apply();
             }
         }).fail(function(error) {
             // something bad is happening!
