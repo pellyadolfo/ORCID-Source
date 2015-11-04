@@ -39,7 +39,7 @@
 					<table class="ng-cloak table table-striped">
 						<thead>
 						<tr>
-							<th>Select</th>
+							<th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()"/></th>
 							<th>${springMacroRequestContext.getMessage("search_results.thORCIDID")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thGivenname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thFamilynames")}</th>
@@ -52,7 +52,7 @@
 							<tr>
 							</tr>
 							<tr ng-repeat='result in searchResults.orcidSearchResult'>
-									<td><input type="checkbox" value="{{$index}}"/></td>
+									<td><input type="checkbox" value="{{$index}}" ng-model="result.Selected"/></td>
 									<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>

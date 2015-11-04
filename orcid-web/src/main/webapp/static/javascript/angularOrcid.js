@@ -5742,6 +5742,8 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     $scope.term = "";
     $scope.toLock = "";
     $scope.toReview = "";
+    $scope.selectedAll = false;
+    $scope.item = [];
     
     
     
@@ -5761,7 +5763,7 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             dataType: 'json',
             headers: { Accept: 'application/json'},
             success: function(data){
-            	console.log(angular.toJson(data))
+            	//console.log(angular.toJson(data))
             	$scope.searchResults = data.entity.orcidSearchResults;
             	$scope.$apply();
             }
@@ -5799,6 +5801,13 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     	}).fail(function(error){
     		console.log("Couldnt review account");
     	});
+    };
+    
+    $scope.checkAll = function () {
+        $scope.selectedAll = !$scope.selectedAll;    
+        angular.forEach($scope.searchResults.orcidSearchResult, function (item) {
+        	item.Selected = $scope.selectedAll;
+        });
     };
     
 }]);
