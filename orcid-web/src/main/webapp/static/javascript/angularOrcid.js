@@ -5761,7 +5761,6 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
             dataType: 'json',
             headers: { Accept: 'application/json'},
             success: function(data){
-            	console.log(angular.toJson(data))
             	$scope.searchResults = data.entity.orcidSearchResults;
             	$scope.$apply();
             }
@@ -5775,13 +5774,12 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     	$.ajax({
     		url: getBaseUri()+'/admin-search/lock.json?orcid=' + orcid,
             type: 'GET',
-            dataType: 'json',
-            headers: { Accept: 'application/json'},
+            dataType: 'text',
             success: function(data){   
-            	console.log(data);     
-            	$scope.toLock = "";
+            	console.log(data);       	
             }
     	}).fail(function(error){
+    		console.log(error);
     		console.log("Couldnt lock account");
     	});
     };
@@ -5791,11 +5789,9 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     	$.ajax({
     		url: getBaseUri()+'/admin-search/review.json?orcid=' + orcid,
             type: 'GET',
-            dataType: 'json',
-            headers: { Accept: 'application/json'},
+            dataType: 'text',
             success: function(data){   
-            	console.log(data);
-            	$scope.toReview = "";
+            	console.log(data);            	
             }
     	}).fail(function(error){
     		console.log("Couldnt review account");
