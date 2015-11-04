@@ -54,7 +54,7 @@
 									<td><input type="checkbox" value="{{$index}}"/></td>
 									<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
-									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName}}</td>
+									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>
 									<td>{{result.orcidProfile.orcidBio.biography.content}}</td>
 								
