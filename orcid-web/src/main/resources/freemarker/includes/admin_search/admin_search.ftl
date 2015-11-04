@@ -35,6 +35,10 @@
 				</div>
 				
 				<!-- RESULTS -->
+				<div ng-show="searchResults.numFound == 0" ng-clock>
+					<br />
+					Nothing to show
+				</div>
 				<div ng-show="searchResults.numFound > 0" ng-cloak>
 					<h3 class="ng-cloak search-result-head">${springMacroRequestContext.getMessage("search_results.h3Searchresults")}</h3>
 					<table class="ng-cloak table table-striped">
