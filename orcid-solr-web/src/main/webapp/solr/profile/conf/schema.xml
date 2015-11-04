@@ -528,6 +528,10 @@
 			stored="true" multiValued="false" />
 		<field name="other-names" type="text_general" indexed="true"
 			stored="true" multiValued="true" />
+		
+		<field name="bio" type="text_general" indexed="true"
+			stored="true" multiValued="false" />
+		
 		<field name="external-id-source" type="string" indexed="true"
 			stored="false" multiValued="true" />
 		<field name="external-id-orcid" type="string" indexed="true"

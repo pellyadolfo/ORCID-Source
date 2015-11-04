@@ -127,12 +127,13 @@ public class OrcidIndexManagerImpl implements OrcidIndexManager {
 
         OrcidBio orcidBio = filteredProfile.getOrcidBio();
         if (orcidBio != null) {
+        	profileIndexDocument.setBio(orcidBio.getBiography() != null ? orcidBio.getBiography().getContent() : null);
             PersonalDetails personalDetails = orcidBio.getPersonalDetails();
             boolean persistPersonalDetails = personalDetails != null;
             if (persistPersonalDetails) {
                 profileIndexDocument.setFamilyName(personalDetails.getFamilyName() != null ? personalDetails.getFamilyName().getContent() : null);
                 profileIndexDocument.setGivenNames(personalDetails.getGivenNames() != null ? personalDetails.getGivenNames().getContent() : null);
-                profileIndexDocument.setCreditName(personalDetails.getCreditName() != null ? personalDetails.getCreditName().getContent() : null);
+                profileIndexDocument.setCreditName(personalDetails.getCreditName() != null ? personalDetails.getCreditName().getContent() : null);                
                 List<OtherName> otherNames = personalDetails.getOtherNames() != null ? personalDetails.getOtherNames().getOtherName() : null;
                 if (otherNames != null && !otherNames.isEmpty()) {
                     List<String> names = new ArrayList<String>();

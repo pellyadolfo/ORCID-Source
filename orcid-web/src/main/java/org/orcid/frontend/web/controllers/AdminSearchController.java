@@ -74,7 +74,7 @@ public class AdminSearchController extends BaseController {
     public @ResponseBody Object search(@RequestParam("term") String term, @RequestParam("maxResults") String maxResults) {
         Map<String, List<String>> queryParams = new HashMap<String, List<String>>();
         setParam(queryParams, "start", "0");
-        setParam(queryParams, "q", "{!edismax qf=\"given-and-family-names^50.0 family-name^10.0 given-names^5.0 credit-name^10.0 other-names^5.0 text^1.0\" pf=\"given-and-family-names^50.0\" mm=1}" + term);
+        setParam(queryParams, "q", "{!edismax qf=\"given-and-family-names^50.0 family-name^10.0 given-names^5.0 credit-name^10.0 other-names^5.0 bio^10.0 text^1.0\" pf=\"given-and-family-names^50.0\" mm=1}" + term);
         setParam(queryParams, "rows", maxResults);
         Response jsonQueryResults = searchByQuery(term, queryParams);
         return jsonQueryResults;

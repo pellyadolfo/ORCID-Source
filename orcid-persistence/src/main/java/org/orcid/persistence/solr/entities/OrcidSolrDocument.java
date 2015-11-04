@@ -201,6 +201,9 @@ public class OrcidSolrDocument {
 
     @Field(SolrConstants.PRIMARY_RECORD)
     private String primaryRecord;
+    
+    @Field("bio")
+    private String bio;
 
     public String getOrcid() {
         return orcid;
@@ -371,12 +374,20 @@ public class OrcidSolrDocument {
         this.primaryRecord = primaryRecord;
     }
 
+    public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+    
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
+    }           
 
-    @Override
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -433,6 +444,7 @@ public class OrcidSolrDocument {
         result = prime * result + ((uri == null) ? 0 : uri.hashCode());
         result = prime * result + ((urn == null) ? 0 : urn.hashCode());
         result = prime * result + ((wosuid == null) ? 0 : wosuid.hashCode());
+        result = prime * result + ((bio == null) ? 0 : bio.hashCode());
         return result;
     }
 
@@ -710,6 +722,15 @@ public class OrcidSolrDocument {
                 return false;
         } else if (!wosuid.equals(other.wosuid))
             return false;
+        
+        
+        if (bio == null) {
+            if (other.bio != null)
+                return false;
+        } else if (!bio.equals(other.bio))
+            return false;
+        
+        
         return true;
     }
 

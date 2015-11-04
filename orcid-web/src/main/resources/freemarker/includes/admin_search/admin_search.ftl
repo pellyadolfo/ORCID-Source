@@ -57,7 +57,7 @@
 						</thead>
 						<tbody ng-repeat='result in searchResults.orcidSearchResult' id='{{result.orcidProfile.orcidIdentifier.path}}'>
 							<tr ng-hide="hideRow[$index] == true">
-									<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
+									<td><a href="./{{result.orcidProfile.orcidIdentifier.path}}" target="_blank">{{result.orcidProfile.orcidIdentifier.path}}</a></td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
 									<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>
