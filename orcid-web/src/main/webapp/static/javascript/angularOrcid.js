@@ -5771,9 +5771,9 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
         });
     };
     
-    $scope.lockResult = function() {
+    $scope.lockResult = function(orcid) {    	
     	$.ajax({
-    		url: getBaseUri()+'/admin-search/lock.json?orcid=' + $scope.toLock,
+    		url: getBaseUri()+'/admin-search/lock.json?orcid=' + orcid,
             type: 'GET',
             dataType: 'json',
             headers: { Accept: 'application/json'},
@@ -5786,9 +5786,10 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     	});
     };
     
-    $scope.reviewResult = function() {
+    $scope.reviewResult = function(orcid) {
+    	console.log('Reviewing' + orcid);
     	$.ajax({
-    		url: getBaseUri()+'/admin-search/review.json?orcid=' + $scope.toReview,
+    		url: getBaseUri()+'/admin-search/review.json?orcid=' + orcid,
             type: 'GET',
             dataType: 'json',
             headers: { Accept: 'application/json'},

@@ -38,32 +38,33 @@
 					<h3 class="ng-cloak search-result-head">${springMacroRequestContext.getMessage("search_results.h3Searchresults")}</h3>
 					<table class="ng-cloak table table-striped">
 						<thead>
-						<tr>
-							<th>Select</th>
+						<tr>							
 							<th>${springMacroRequestContext.getMessage("search_results.thORCIDID")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thGivenname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thFamilynames")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thCreditname")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thOthernames")}</th>
 							<th>${springMacroRequestContext.getMessage("search_results.thBiography")}</th>
+							<th>Lock</th>
+							<th>Review</th>
 						</tr>
 						</thead>
 						<tbody>
 							<tr>
 							</tr>
-							<tr ng-repeat='result in searchResults.orcidSearchResult'>
-									<td><input type="checkbox" value="{{$index}}"/></td>
-									<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
-									<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
-									<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
-									<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>
-									<td>
-										<span ng-repeat='otherName in result.orcidProfile.orcidBio.personalDetails.otherNames.otherName'>
-											{{otherName.content}}
-										</span>
-									</td>									
-									<td>{{result.orcidProfile.orcidBio.biography.content}}</td>
-								
+							<tr ng-repeat='result in searchResults.orcidSearchResult' id='{{result.orcidProfile.orcidIdentifier.path}}'>									
+								<td>{{result.orcidProfile.orcidIdentifier.path}}</td>
+								<td>{{result.orcidProfile.orcidBio.personalDetails.givenNames.content}}</td>
+								<td>{{result.orcidProfile.orcidBio.personalDetails.familyName.content}}</td>
+								<td>{{result.orcidProfile.orcidBio.personalDetails.creditName}}</td>
+								<td>
+									<span ng-repeat='otherName in result.orcidProfile.orcidBio.personalDetails.otherNames.otherName'>
+										{{otherName.content}}
+									</span>
+								</td>									
+								<td>{{result.orcidProfile.orcidBio.biography.content}}</td>
+								<td><input type="checkbox" value="{{$index}}" ng-click="lockResult(result.orcidProfile.orcidIdentifier.path)"/></td>
+								<td><input type="checkbox" value="{{$index}}" ng-click="reviewResult(result.orcidProfile.orcidIdentifier.path)"/></td>
 							</tr>
 						</tbody>
 					</table>
