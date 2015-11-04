@@ -5814,6 +5814,7 @@ orcidNgModule.controller('AdminSearchCtrl',['$scope', '$compile', function ($sco
     
     $scope.cleanResults = function(){
     	$scope.searchResults.numFound = 0;
+    	$scope.term = '';
     }
     
 }]);
