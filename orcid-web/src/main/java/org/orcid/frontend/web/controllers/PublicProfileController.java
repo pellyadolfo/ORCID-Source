@@ -133,7 +133,7 @@ public class PublicProfileController extends BaseWorkspaceController {
     @RequestMapping(value = "/{orcid:(?:\\d{4}-){3,}\\d{3}[\\dX]}")
     public ModelAndView publicPreview(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "1") int pageNo,
             @RequestParam(value = "v", defaultValue = "0") int v, @RequestParam(value = "maxResults", defaultValue = "15") int maxResults,
-            @PathVariable("orcid") String orcid) {
+            @PathVariable("orcid") String orcid, @RequestParam(value = "print", defaultValue = "false") boolean print) {
 
         OrcidProfile profile = orcidProfileCacheManager.retrievePublic(orcid);
 
@@ -142,8 +142,12 @@ public class PublicProfileController extends BaseWorkspaceController {
         }
 
         ModelAndView mav = null;
-        mav = new ModelAndView("public_profile_v3");
+        if (print)
+            mav = new ModelAndView("public_profile_print_v3");
+        else
+        	mav = new ModelAndView("public_profile_v3");	
         mav.addObject("isPublicProfile", true);
+        mav.addObject("isPrintView", print);
 
         boolean isProfileEmtpy = true;
 

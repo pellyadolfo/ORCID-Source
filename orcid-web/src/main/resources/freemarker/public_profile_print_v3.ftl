@@ -17,6 +17,4 @@
 
 -->
 <#-- @ftlvariable name="profile" type="org.orcid.jaxb.model.message.OrcidProfile" -->
-<@public >
 <#include "public_body.ftl"/>
-</@public>
