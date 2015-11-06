@@ -84,7 +84,7 @@ import com.orcid.api.common.server.delegator.OrcidClientCredentialEndPointDelega
 @RequestMapping(value = "/oauth", method = RequestMethod.GET)
 public class OauthConfirmAccessController extends BaseController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(OauthConfirmAccessController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OauthConfirmAccessController.class);
 
     private static String PUBLIC_CLIENT_GROUP_NAME = "PubApp";
 
@@ -118,19 +118,19 @@ public class OauthConfirmAccessController extends BaseController {
     private OrcidRandomValueTokenServices tokenServices;
     @Resource
     private OrcidClientCredentialEndPointDelegator orcidClientCredentialEndPointDelegator;
-    
+
     @Resource(name = "profileEntityCacheManager")
     ProfileEntityCacheManager profileEntityCacheManager;
-    
+
     @Resource
     private EncryptionManager encryptionManager;
 
     private static String REDIRECT_URI_ERROR = "/oauth/error/redirect-uri-mismatch?client_id={0}";
-        
-    
+
     @RequestMapping(value = "/token", method = RequestMethod.POST)
-    public @ResponseBody Object obtainOauth2TokenPost(HttpServletRequest request) {
-    	String clientId = request.getParameter("client_id");
+    public @ResponseBody
+    Object obtainOauth2TokenPost(HttpServletRequest request) {
+        String clientId = request.getParameter("client_id");
         String clientSecret = request.getParameter("client_secret");
         String code = request.getParameter("code");
         String state = request.getParameter("state");
@@ -145,21 +145,21 @@ public class OauthConfirmAccessController extends BaseController {
         }
         Response res = null;
         try {
-        	res = orcidClientCredentialEndPointDelegator.obtainOauth2Token(clientId, clientSecret, refreshToken, grantType, code, scopes, state, redirectUri, resourceId);
-        } catch(Exception e) {
-        	return getLegacyOrcidEntity("OAuth2 problem", e);
+            res = orcidClientCredentialEndPointDelegator.obtainOauth2Token(clientId, clientSecret, refreshToken, grantType, code, scopes, state, redirectUri, resourceId);
+        } catch (Exception e) {
+            return getLegacyOrcidEntity("OAuth2 problem", e);
         }
         String result = JsonUtils.convertToJsonString(res.getEntity());
         return result;
     }
-    
+
     private OrcidMessage getLegacyOrcidEntity(String prefix, Throwable e) {
         OrcidMessage entity = new OrcidMessage();
         entity.setMessageVersion(OrcidMessage.DEFAULT_VERSION);
         entity.setErrorDesc(new ErrorDesc(prefix + " : " + e.getMessage()));
         return entity;
     }
-    
+
     @RequestMapping(value = { "/signin", "/login" }, method = RequestMethod.GET)
     public ModelAndView loginGetHandler2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
         // find client name if available
@@ -183,9 +183,9 @@ public class OauthConfirmAccessController extends BaseController {
             if (matcher.find()) {
                 clientId = matcher.group(1);
                 if (clientId != null) {
-                	try {
-                		clientId = URLDecoder.decode(clientId, "UTF-8").trim();
-                	} catch (UnsupportedEncodingException e) {
+                    try {
+                        clientId = URLDecoder.decode(clientId, "UTF-8").trim();
+                    } catch (UnsupportedEncodingException e) {
                     }
                     Matcher emailMatcher = RegistrationController.emailPattern.matcher(url);
                     if (emailMatcher.find()) {
@@ -231,7 +231,7 @@ public class OauthConfirmAccessController extends BaseController {
                     if (responseTypeMatcher.find()) {
                         responseType = responseTypeMatcher.group(1);
                         try {
-                        	responseType = URLDecoder.decode(responseType, "UTF-8").trim();
+                            responseType = URLDecoder.decode(responseType, "UTF-8").trim();
                         } catch (UnsupportedEncodingException e) {
                         }
                     }
@@ -241,7 +241,7 @@ public class OauthConfirmAccessController extends BaseController {
 
                     // Check if the client has persistent tokens enabled
                     if (clientDetails.isPersistentTokensEnabled())
-                        usePersistentTokens = true;                    
+                        usePersistentTokens = true;
 
                     // validate client scopes
                     try {
@@ -262,7 +262,7 @@ public class OauthConfirmAccessController extends BaseController {
                     // If client type is null it means it is a public client
                     if (clientDetails.getClientType() == null) {
                         clientGroupName = PUBLIC_CLIENT_GROUP_NAME;
-                    } else if (!PojoUtil.isEmpty(clientDetails.getGroupProfileId())) {                        
+                    } else if (!PojoUtil.isEmpty(clientDetails.getGroupProfileId())) {
                         ProfileEntity groupProfile = profileEntityCacheManager.retrieve(clientDetails.getGroupProfileId());
                         clientGroupName = groupProfile.getCreditName();
                     }
@@ -291,12 +291,13 @@ public class OauthConfirmAccessController extends BaseController {
     }
 
     @RequestMapping(value = "/confirm_access", method = RequestMethod.GET)
-    public ModelAndView loginGetHandler(HttpServletRequest request,  HttpServletResponse response, ModelAndView mav, @RequestParam("client_id") String clientId, @RequestParam("scope") String scope, @RequestParam("redirect_uri") String redirectUri) {
+    public ModelAndView loginGetHandler(HttpServletRequest request, HttpServletResponse response, ModelAndView mav, @RequestParam("client_id") String clientId,
+            @RequestParam("scope") String scope, @RequestParam("redirect_uri") String redirectUri) {
         OrcidProfile profile = orcidProfileManager.retrieveOrcidProfile(getCurrentUserOrcid(), LoadOptions.BIO_ONLY);
         clientId = (clientId != null) ? clientId.trim() : clientId;
         scope = (scope != null) ? scope.trim().replaceAll(" +", " ") : scope;
         redirectUri = (redirectUri != null) ? redirectUri.trim() : redirectUri;
-       
+
         Boolean justRegistered = (Boolean) request.getSession().getAttribute(JUST_REGISTERED);
         if (justRegistered != null) {
             request.getSession().removeAttribute(JUST_REGISTERED);
@@ -308,12 +309,12 @@ public class OauthConfirmAccessController extends BaseController {
         String clientWebsite = "";
 
         boolean usePersistentTokens = false;
-        
+
         ClientDetailsEntity clientDetails = clientDetailsManager.findByClientId(clientId);
         clientName = clientDetails.getClientName() == null ? "" : clientDetails.getClientName();
         clientDescription = clientDetails.getClientDescription() == null ? "" : clientDetails.getClientDescription();
         clientWebsite = clientDetails.getClientWebsite() == null ? "" : clientDetails.getClientWebsite();
-        
+
         // validate client scopes
         try {
             authorizationEndpoint.validateScope(scope, clientDetails);
@@ -326,18 +327,15 @@ public class OauthConfirmAccessController extends BaseController {
             error.setView(rView);
             return error;
         }
-       
+
         // Check if the client has persistent tokens enabled
         if (clientDetails.isPersistentTokensEnabled()) {
             usePersistentTokens = true;
         }
 
-        // TODO: If persistent tokens are enabled, check for the existing tokens
-        // for this client, if one exists with the same scopes, just return the
-        // authorization code
         if (usePersistentTokens) {
             boolean tokenAlreadyExists = tokenServices.tokenAlreadyExists(clientId, getEffectiveUserOrcid(), OAuth2Utils.parseParameterList(scope));
-            if (tokenAlreadyExists) {                
+            if (tokenAlreadyExists) {
                 AuthorizationRequest authorizationRequest = (AuthorizationRequest) request.getSession().getAttribute("authorizationRequest");
                 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                 Map<String, String> requestParams = new HashMap<String, String>();
@@ -355,7 +353,7 @@ public class OauthConfirmAccessController extends BaseController {
                     // Then check if the client granted the persistent token
                     requestParams.put(OauthTokensConstants.GRANT_PERSISTENT_TOKEN, "true");
                 }
-                
+
                 // Session status
                 SimpleSessionStatus status = new SimpleSessionStatus();
 
@@ -363,7 +361,7 @@ public class OauthConfirmAccessController extends BaseController {
                 // Authorization request model
                 Map<String, Object> model = new HashMap<String, Object>();
                 model.put("authorizationRequest", authorizationRequest);
-                
+
                 // Approve
                 RedirectView view = (RedirectView) authorizationEndpoint.approveOrDeny(approvalParams, model, status, auth);
                 ModelAndView authCodeView = new ModelAndView();
@@ -371,7 +369,7 @@ public class OauthConfirmAccessController extends BaseController {
                 return authCodeView;
             }
         }
-        
+
         if (clientDetails.getClientType() == null) {
             clientGroupName = PUBLIC_CLIENT_GROUP_NAME;
         } else if (!PojoUtil.isEmpty(clientDetails.getGroupProfileId())) {
@@ -419,25 +417,25 @@ public class OauthConfirmAccessController extends BaseController {
     OauthAuthorizeForm authenticateAndAuthorize(HttpServletRequest request, HttpServletResponse response, @RequestBody OauthAuthorizeForm form) {
         // Clean form errors
         form.setErrors(new ArrayList<String>());
-        SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+        SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);        
         boolean willBeRedirected = false;
-        
+
         if (form.getApproved()) {
             // Validate name and password
             validateUserNameAndPassword(form);
             if (form.getErrors().isEmpty()) {
                 try {
                     // Authenticate user
-                    Authentication auth = authenticateUser(request, form);                                        
+                    Authentication auth = authenticateUser(request, form);
                     // Create authorization params
                     SimpleSessionStatus status = new SimpleSessionStatus();
                     Map<String, Object> model = new HashMap<String, Object>();
                     Map<String, String> params = new HashMap<String, String>();
                     Map<String, String> approvalParams = new HashMap<String, String>();
-                    
-                    // Set params 
+
+                    // Set params
                     setOauthParams(savedRequest, form, params, approvalParams, false);
-                    
+
                     // Authorize
                     try {
                         authorizationEndpoint.authorize(model, params, status, auth);
@@ -469,19 +467,21 @@ public class OauthConfirmAccessController extends BaseController {
                     form.getErrors().add(getMessage("orcid.frontend.security.bad_credentials"));
                 }
             }
-        } else {            
+        } else {
             String stateParam = null;
-            
-            if(savedRequest != null && savedRequest.getParameterMap() != null && savedRequest.getParameterValues("state") != null) {
-                if(savedRequest.getParameterValues("state").length > 0)
+
+            if (savedRequest != null && savedRequest.getParameterMap() != null && savedRequest.getParameterValues("state") != null) {
+                if (savedRequest.getParameterValues("state").length > 0)
                     stateParam = savedRequest.getParameterValues("state")[0];
             }
             form.setRedirectUri(Text.valueOf(buildDenyRedirectUri(form.getRedirectUri().getValue(), stateParam)));
             willBeRedirected = true;
         }
-        
-        //If there was an authentication error, dont log since the user will not be redirected yet
+
+        // If there was an authentication error, dont log since the user will
+        // not be redirected yet
         if (willBeRedirected) {
+            LOGGER.info("OauthConfirmAccessController saved url: " + savedRequest.getRedirectUrl() );
             LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
         }
         return form;
@@ -494,7 +494,7 @@ public class OauthConfirmAccessController extends BaseController {
         if (request.getSession().getAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME) != null) {
             request.getSession().removeAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME);
         }
-        
+
         OauthRegistration empty = new OauthRegistration(registrationController.getRegister(request, response));
         // Creation type in oauth will always be member referred
         empty.setCreationType(Text.valueOf(CreationMethod.MEMBER_REFERRED.value()));
@@ -518,30 +518,33 @@ public class OauthConfirmAccessController extends BaseController {
         } else {
             SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
             String stateParam = null;
-            
-            if(savedRequest != null && savedRequest.getParameterMap() != null && savedRequest.getParameterValues("state") != null) {
-                if(savedRequest.getParameterValues("state").length > 0)
+
+            if (savedRequest != null && savedRequest.getParameterMap() != null && savedRequest.getParameterValues("state") != null) {
+                if (savedRequest.getParameterValues("state").length > 0)
                     stateParam = savedRequest.getParameterValues("state")[0];
             }
             form.setRedirectUri(Text.valueOf(buildDenyRedirectUri(form.getRedirectUri().getValue(), stateParam)));
         }
-        
+
         return form;
     }
 
     @RequestMapping(value = "/custom/registerConfirm.json", method = RequestMethod.POST)
     public @ResponseBody
-    OauthRegistration registerAndAuthorize(HttpServletRequest request, HttpServletResponse response, @RequestBody OauthRegistration form) {                
+    OauthRegistration registerAndAuthorize(HttpServletRequest request, HttpServletResponse response, @RequestBody OauthRegistration form) {
         if (form.getApproved()) {
             boolean usedCaptcha = false;
 
             // If recatcha wasn't loaded do nothing. This is for countries that
             // block google.
             if (form.getGrecaptchaWidgetId().getValue() != null) {
-                // If the captcha verified key is not in the session, redirect to
+                // If the captcha verified key is not in the session, redirect
+                // to
                 // the login page
-                if (request.getSession().getAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME) == null || PojoUtil.isEmpty(form.getGrecaptcha())
-                        || !encryptionManager.encryptForExternalUse(form.getGrecaptcha().getValue()).equals(request.getSession().getAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME))) {
+                if (request.getSession().getAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME) == null
+                        || PojoUtil.isEmpty(form.getGrecaptcha())
+                        || !encryptionManager.encryptForExternalUse(form.getGrecaptcha().getValue()).equals(
+                                request.getSession().getAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME))) {
                     String redirectUri = this.getBaseUri() + REDIRECT_URI_ERROR;
                     // Set the client id
                     redirectUri = redirectUri.replace("{0}", form.getClientId().getValue());
@@ -555,21 +558,24 @@ public class OauthConfirmAccessController extends BaseController {
                     if (!PojoUtil.isEmpty(form.getScope()))
                         redirectUri += "&scope=" + form.getScope().getValue();
                     // Copy the state param if present
-                    if(!PojoUtil.isEmpty(request.getParameter("state")))                    
+                    if (!PojoUtil.isEmpty(request.getParameter("state")))
                         redirectUri += "&state=" + request.getParameter("state");
                     form.setRedirectUri(Text.valueOf(redirectUri));
+                    SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+                    if(savedRequest != null)
+                        LOGGER.info("OauthConfirmAccessController saved url: " + savedRequest.getRedirectUrl() );
                     LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
                     return form;
                 }
-                
+
                 usedCaptcha = true;
             }
 
             // Remove the session hash if needed
             if (request.getSession().getAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME) != null) {
                 request.getSession().removeAttribute(RegistrationController.GRECAPTCHA_SESSION_ATTRIBUTE_NAME);
-            }                        
-            
+            }
+
             // Check there are no errors
             registrationController.validateRegistrationFields(request, form);
             if (form.getErrors().isEmpty()) {
@@ -586,10 +592,10 @@ public class OauthConfirmAccessController extends BaseController {
                 Map<String, String> approvalParams = new HashMap<String, String>();
                 // Put all request params into the params
                 SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
-                
-                // Set params 
+
+                // Set params
                 setOauthParams(savedRequest, form, params, approvalParams, true);
-                
+
                 // Authorize
                 try {
                     authorizationEndpoint.authorize(model, params, status, auth);
@@ -620,6 +626,9 @@ public class OauthConfirmAccessController extends BaseController {
         } else {
             form.setRedirectUri(Text.valueOf(buildDenyRedirectUri(form.getRedirectUri().getValue(), request.getParameter("state"))));
         }
+        SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+        if(savedRequest != null)            
+            LOGGER.info("OauthConfirmAccessController saved url: " + savedRequest.getRedirectUrl() );
         LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
         return form;
     }
@@ -678,16 +687,16 @@ public class OauthConfirmAccessController extends BaseController {
             }
         }
     }
-        
+
     @RequestMapping(value = { "/custom/authorize.json" }, method = RequestMethod.POST)
     public @ResponseBody
-    OauthAuthorizeForm authorize(HttpServletRequest request, @RequestBody OauthAuthorizeForm form) {
+    OauthAuthorizeForm authorize(HttpServletRequest request, HttpServletResponse response, @RequestBody OauthAuthorizeForm form) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         AuthorizationRequest authorizationRequest = (AuthorizationRequest) request.getSession().getAttribute("authorizationRequest");
         Map<String, String> requestParams = new HashMap<String, String>(authorizationRequest.getRequestParameters());
         Map<String, String> approvalParams = new HashMap<String, String>();
-                        
-        // Add the persistent token information        
+
+        // Add the persistent token information
         if (form.getApproved()) {
             requestParams.put(OAuth2Utils.USER_OAUTH_APPROVAL, "true");
             approvalParams.put(OAuth2Utils.USER_OAUTH_APPROVAL, "true");
@@ -710,11 +719,14 @@ public class OauthConfirmAccessController extends BaseController {
         // Authorization request model
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("authorizationRequest", authorizationRequest);
-        
+
         // Approve
         RedirectView view = (RedirectView) authorizationEndpoint.approveOrDeny(approvalParams, model, status, auth);
-        form.setRedirectUri(Text.valueOf(view.getUrl()));                
-        LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());        
+        form.setRedirectUri(Text.valueOf(view.getUrl()));
+        SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
+        if(savedRequest != null)            
+            LOGGER.info("OauthConfirmAccessController saved url: " + savedRequest.getRedirectUrl() );
+        LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
         return form;
     }
 
@@ -725,7 +737,7 @@ public class OauthConfirmAccessController extends BaseController {
      *            Redirect uri
      * @return the redirect uri string with the deny params
      * */
-    private String buildDenyRedirectUri(String redirectUri, String stateParam) {        
+    private String buildDenyRedirectUri(String redirectUri, String stateParam) {
         if (!PojoUtil.isEmpty(redirectUri)) {
             if (redirectUri.contains("?")) {
                 redirectUri = redirectUri.concat("&error=access_denied&error_description=User denied access");
@@ -733,7 +745,7 @@ public class OauthConfirmAccessController extends BaseController {
                 redirectUri = redirectUri.concat("?error=access_denied&error_description=User denied access");
             }
         }
-        if(!PojoUtil.isEmpty(stateParam))
+        if (!PojoUtil.isEmpty(stateParam))
             redirectUri += "&state=" + stateParam;
         return redirectUri;
     }
@@ -752,7 +764,7 @@ public class OauthConfirmAccessController extends BaseController {
             copy(savedParams, params);
         }
     }
-    
+
     /**
      * Copies all request parameters into the provided params map
      * 
@@ -767,7 +779,7 @@ public class OauthConfirmAccessController extends BaseController {
             copy(savedParams, params);
         }
     }
-    
+
     private void copy(Map<String, String[]> savedParams, Map<String, String> params) {
         if (savedParams != null && !savedParams.isEmpty()) {
             for (String key : savedParams.keySet()) {
@@ -862,5 +874,5 @@ public class OauthConfirmAccessController extends BaseController {
         if (clientDetails == null)
             throw new IllegalArgumentException(getMessage("web.orcid.oauth_invalid_client.exception"));
         return clientDetails.isPersistentTokensEnabled();
-    }
+    }        
 }
