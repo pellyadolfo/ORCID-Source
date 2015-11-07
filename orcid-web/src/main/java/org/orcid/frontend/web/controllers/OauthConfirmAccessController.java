@@ -459,7 +459,7 @@ public class OauthConfirmAccessController extends BaseController {
                             redirectUri += "&state=" + params.get("state");
                         form.setRedirectUri(Text.valueOf(redirectUri));
                         if(savedRequest != null)
-                            LOGGER.info("OauthConfirmAccessController original request" + savedRequest.getRedirectUrl());
+                            LOGGER.info("OauthConfirmAccessController original request: " + savedRequest.getRedirectUrl());
                         LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
                         return form;
                     }
@@ -485,7 +485,7 @@ public class OauthConfirmAccessController extends BaseController {
         //If there was an authentication error, dont log since the user will not be redirected yet
         if (willBeRedirected) {
             if(savedRequest != null)
-                LOGGER.info("OauthConfirmAccessController original request" + savedRequest.getRedirectUrl());
+                LOGGER.info("OauthConfirmAccessController original request: " + savedRequest.getRedirectUrl());
             LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
         }
         return form;
@@ -564,7 +564,7 @@ public class OauthConfirmAccessController extends BaseController {
                     form.setRedirectUri(Text.valueOf(redirectUri));
                     SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
                     if(savedRequest != null)
-                        LOGGER.info("OauthConfirmAccessController original request" + savedRequest.getRedirectUrl());
+                        LOGGER.info("OauthConfirmAccessController original request: " + savedRequest.getRedirectUrl());
                     LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
                     return form;
                 }
@@ -629,7 +629,7 @@ public class OauthConfirmAccessController extends BaseController {
         }
         SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
         if(savedRequest != null)
-            LOGGER.info("OauthConfirmAccessController original request" + savedRequest.getRedirectUrl());
+            LOGGER.info("OauthConfirmAccessController original request: " + savedRequest.getRedirectUrl());
         LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());
         return form;
     }
@@ -726,7 +726,7 @@ public class OauthConfirmAccessController extends BaseController {
         form.setRedirectUri(Text.valueOf(view.getUrl()));    
         SavedRequest savedRequest = new HttpSessionRequestCache().getRequest(request, response);
         if(savedRequest != null)
-            LOGGER.info("OauthConfirmAccessController original request" + savedRequest.getRedirectUrl());
+            LOGGER.info("OauthConfirmAccessController original request: " + savedRequest.getRedirectUrl());
         LOGGER.info("OauthConfirmAccessController form.getRedirectUri being sent to client browser: " + form.getRedirectUri());        
         return form;
     }
