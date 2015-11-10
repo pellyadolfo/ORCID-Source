@@ -291,6 +291,10 @@
 			access="ROLE_GROUP"/>			
 		<sec:intercept-url pattern="/group/.*" 
 			access="ROLE_GROUP"/>			
+		<sec:intercept-url pattern="/admin-search" 
+			access="ROLE_ADMIN"/>
+		<sec:intercept-url pattern="/admin-search/.*" 
+			access="ROLE_ADMIN"/>
 		<sec:intercept-url pattern="/admin-actions" 
 			access="ROLE_ADMIN"/>
 		<sec:intercept-url pattern="/admin-actions/.*" 
