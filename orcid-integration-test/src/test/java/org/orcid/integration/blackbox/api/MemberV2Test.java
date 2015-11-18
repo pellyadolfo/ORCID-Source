@@ -897,8 +897,7 @@ public class MemberV2Test extends BlackBoxBase {
         wExtId1.setUrl(new Url("http://orcid.org/work#1"));
         work1.getExternalIdentifiers().getWorkExternalIdentifier().clear();
         work1.getExternalIdentifiers().getWorkExternalIdentifier().add(wExtId1);
-        
-        
+                
         //Add the work
         ClientResponse postResponse = memberV2ApiClient.createWorkXml(user1OrcidId, work1, accessToken);
         assertNotNull(postResponse);
@@ -1044,14 +1043,15 @@ public class MemberV2Test extends BlackBoxBase {
             return accessTokens.get(clientId);
         }
         
-        String accessToken = super.getAccessToken(ScopePathType.ACTIVITIES_UPDATE.value(), clientId, clientSecret, clientRedirectUri);        
+        String accessToken = super.getAccessToken(ScopePathType.ACTIVITIES_UPDATE.value() + " " + ScopePathType.READ_LIMITED.value(), clientId, clientSecret, clientRedirectUri);        
         accessTokens.put(clientId,  accessToken);        
         return accessToken;
     }    
 
     public void cleanActivities() throws JSONException, InterruptedException, URISyntaxException {
-        for(String token : accessTokens.values()) {
-            cleanActivities(token);
-        }
+        if(accessTokens.containsKey(this.client1ClientId)) {
+            String accessToken = accessTokens.get(this.client1ClientId);
+            cleanActivities(accessToken);
+        }        
     }
 }
