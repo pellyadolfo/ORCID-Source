@@ -289,7 +289,7 @@ public class ResearcherUrlsTests extends BlackBoxBase {
             return accessTokens.get(clientId);
         }
 
-        String accessToken = super.getAccessToken(ScopePathType.PERSON_UPDATE.value(), clientId, clientSecret, redirectUri);
+        String accessToken = super.getAccessToken(ScopePathType.PERSON_UPDATE.value() + " " + ScopePathType.READ_LIMITED.value(), clientId, clientSecret, redirectUri);
         accessTokens.put(clientId, accessToken);
         return accessToken;
     }
