@@ -779,7 +779,7 @@ public class PublicV2Test {
             webDriver = new FirefoxDriver();
             webDriverHelper = new WebDriverHelper(webDriver, webBaseUrl, redirectUri);
             oauthHelper.setWebDriverHelper(webDriverHelper);
-            accessToken = oauthHelper.obtainAccessToken(client1ClientId, client1ClientSecret, ScopePathType.ACTIVITIES_READ_LIMITED.value() + " " + ScopePathType.ACTIVITIES_UPDATE.value(), user1UserName, user1Password,
+            accessToken = oauthHelper.obtainAccessToken(client1ClientId, client1ClientSecret, ScopePathType.ACTIVITIES_UPDATE.value(), user1UserName, user1Password,
                     redirectUri);
             webDriver.quit();
         }
