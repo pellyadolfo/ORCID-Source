@@ -9024,7 +9024,7 @@ orcidNgModule.controller('OauthAuthorizationController',['$scope', '$compile', '
     $scope.loginAndAuthorize = function() {
         $scope.authorizationForm.approved = true;
         //Fire GA sign-in-submit
-        orcidGA.gaPush(['send', 'event', 'RegGrowth', 'Sign-In-Submit' , 'OAuth ' + orcidGA.buildClientString($scope.authorizationForm.memberName.value, $scope.authorizationForm.clientName.value)]);
+        //orcidGA.gaPush(['send', 'event', 'RegGrowth', 'Sign-In-Submit' , 'OAuth ' + orcidGA.buildClientString($scope.authorizationForm.memberName.value, $scope.authorizationForm.clientName.value)]);
         $scope.submitLogin();
     };
 
