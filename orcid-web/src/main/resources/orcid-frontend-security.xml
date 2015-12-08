@@ -28,6 +28,8 @@
 
 	<context:annotation-config />
 	
+    <bean class="org.orcid.frontend.spring.web.social.config.SocialConfig"/>
+	
 	<sec:global-method-security pre-post-annotations="enabled" />
 
 	<bean id="authorizationEndpoint" class="org.orcid.core.oauth.service.OrcidAuthorizationEndpoint">
