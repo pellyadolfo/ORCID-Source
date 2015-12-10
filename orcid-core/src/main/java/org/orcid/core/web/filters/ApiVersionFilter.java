@@ -25,7 +25,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.orcid.core.exception.OrcidBadRequestException;
 import org.orcid.core.version.ApiSection;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
@@ -44,6 +46,9 @@ public class ApiVersionFilter extends OncePerRequestFilter {
 
     private static final Pattern NOTIFICATIONS_PATTERN = Pattern.compile("/notifications/");
 
+    @Value("${org.orcid.core.v1_x.disabled}")
+    private boolean v1_1Disabled;
+    
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -60,6 +65,9 @@ public class ApiVersionFilter extends OncePerRequestFilter {
             version = matcher.group(1);
             httpRequest.setAttribute(API_VERSION_REQUEST_ATTRIBUTE_NAME, version);
         }
+        if(version != null && version.startsWith("1.1") && v1_1Disabled) {
+        	throw new OrcidBadRequestException("API Version 1.1X is not enabled");
+    	}
         return version;
     }
 
