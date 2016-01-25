@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.orcid.jaxb.model.common_rc2.Visibility;
 import org.orcid.persistence.dao.ProfileKeywordDao;
 import org.orcid.persistence.jpa.entities.ProfileKeywordEntity;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 public class ProfileKeywordDaoImpl extends GenericDaoImpl<ProfileKeywordEntity, Long> implements ProfileKeywordDao {
@@ -33,21 +32,13 @@ public class ProfileKeywordDaoImpl extends GenericDaoImpl<ProfileKeywordEntity, 
         super(ProfileKeywordEntity.class);
     }
 
-    /**
-     * Return the list of keywords associated to a specific profile
-     * @param orcid
-     * @return 
-     *          the list of keywords associated with the orcid profile
-     * */
     @Override
-    @SuppressWarnings("unchecked")
-    @Cacheable(value = "dao-keywords", key = "#orcid.concat('-').concat(#lastModified)")
-    public List<ProfileKeywordEntity> getProfileKeywors(String orcid, long lastModified) {
+    @SuppressWarnings("unchecked")    
+    public List<ProfileKeywordEntity> getProfileKeywors(String orcid) {
         Query query = entityManager.createQuery("FROM ProfileKeywordEntity WHERE profile.id = :orcid");
         query.setParameter("orcid", orcid);
         return query.getResultList();
-    }
-    
+    } 
     
     /**
      * Deleted a keyword from database
@@ -91,14 +82,6 @@ public class ProfileKeywordDaoImpl extends GenericDaoImpl<ProfileKeywordEntity, 
         query.setParameter("source_id", sourceId);
         query.setParameter("client_source_id", clientSourceId);
         return query.executeUpdate() > 0 ? true : false;
-    }
-
-    @Override
-    public ProfileKeywordEntity getProfileKeyword(String orcid, Long putCode) {
-        Query query = entityManager.createQuery("FROM ProfileKeywordEntity WHERE profile.id=:orcid and id=:id");
-        query.setParameter("orcid", orcid);
-        query.setParameter("id", putCode);
-        return (ProfileKeywordEntity) query.getSingleResult();
     }
 
     @Override

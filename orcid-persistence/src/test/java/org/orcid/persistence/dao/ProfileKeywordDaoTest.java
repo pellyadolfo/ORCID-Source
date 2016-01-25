@@ -43,8 +43,11 @@ import org.springframework.test.context.ContextConfiguration;
 public class ProfileKeywordDaoTest extends DBUnitTest {
 
     @Resource
-    private ProfileKeywordDao profileKeywordDao;
+    private ProfileKeywordDaoReadOnly profileKeywordDaoReadOnly;
 
+    @Resource
+    private ProfileKeywordDao profileKeywordDao;
+    
     @Resource
     private OtherNameDao otherNameDao;
     
@@ -63,22 +66,23 @@ public class ProfileKeywordDaoTest extends DBUnitTest {
 
     @Before
     public void beforeRunning() {
-        assertNotNull(profileKeywordDao);
+        assertNotNull(profileKeywordDaoReadOnly);
     }
 
     @Test    
     public void testfindProfileKeywords() {
-        List<ProfileKeywordEntity> keywords = profileKeywordDao.getProfileKeywors("4444-4444-4444-4441", 0L);
+        List<ProfileKeywordEntity> keywords = profileKeywordDaoReadOnly.getProfileKeywors("4444-4444-4444-4441", 0L);
         assertNotNull(keywords);
         assertEquals(2, keywords.size());
     }
 
     @Test    
     public void testAddProfileKeyword() {
-        assertEquals(4, profileKeywordDao.getProfileKeywors("4444-4444-4444-4443", 0L).size());
+        assertEquals(4, profileKeywordDaoReadOnly.getProfileKeywors("4444-4444-4444-4443", 0L).size());
         boolean result = profileKeywordDao.addProfileKeyword("4444-4444-4444-4443", "new_keyword", "4444-4444-4444-4443", null);
         assertTrue(result);    
-        assertEquals(5, profileKeywordDao.getProfileKeywors("4444-4444-4444-4443", 0L).size());
+        
+        assertEquals(5, profileKeywordDaoReadOnly.getProfileKeywors("4444-4444-4444-4443", 0L).size());
         
         ProfileKeywordEntity entity = new ProfileKeywordEntity();
         entity.setKeywordName("this is my keyword");
@@ -87,13 +91,13 @@ public class ProfileKeywordDaoTest extends DBUnitTest {
         entity.setVisibility(Visibility.PUBLIC);        
         
         profileKeywordDao.persist(entity);        
-        assertEquals(6, profileKeywordDao.getProfileKeywors("4444-4444-4444-4443", 0L).size());
+        assertEquals(6, profileKeywordDaoReadOnly.getProfileKeywors("4444-4444-4444-4443", 0L).size());
     }
         
     @Test
     public void testDeleteProfileKeyword() {
-        assertEquals(1, profileKeywordDao.getProfileKeywors("4444-4444-4444-4442", 0L).size());
+        assertEquals(1, profileKeywordDaoReadOnly.getProfileKeywors("4444-4444-4444-4442", 0L).size());
         profileKeywordDao.deleteProfileKeyword("4444-4444-4444-4442", "My keyword");
-        assertEquals(0, profileKeywordDao.getProfileKeywors("4444-4444-4444-4442", 0L).size());
+        assertEquals(0, profileKeywordDaoReadOnly.getProfileKeywors("4444-4444-4444-4442", 0L).size());
     }
 }

@@ -49,6 +49,12 @@
      </bean>
     
     <bean id="profileKeywordDao" class="org.orcid.persistence.dao.impl.ProfileKeywordDaoImpl" />
+    
+    <bean id="profileKeywordDaoReadOnly" class="org.orcid.persistence.dao.impl.ProfileKeywordDaoReadOnlyImpl">
+    	<property name="entityManager" ref="entityManagerReadOnly" />
+     </bean>
+    
+    
     <bean id="researcherUrlDao" class="org.orcid.persistence.dao.impl.ResearcherUrlDaoImpl" />
     <bean id="otherNameDao" class="org.orcid.persistence.dao.impl.OtherNameDaoImpl" />
     
