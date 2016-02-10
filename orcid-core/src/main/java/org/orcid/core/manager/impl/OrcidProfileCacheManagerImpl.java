@@ -86,7 +86,7 @@ public class OrcidProfileCacheManagerImpl implements OrcidProfileCacheManager {
                 synchronized (profileBioAndInternalLockers.obtainLock(orcid)) {
                     op = toOrcidProfile(profileBioAndInternalCache.get(orcid));
                     if (needsFresh(dbDate, op)) {
-                        op = orcidProfileManager.retrieveFreshOrcidProfile(orcid, LoadOptions.ALL);
+                        op = orcidProfileManager.retrieveFreshOrcidProfile(orcid, LoadOptions.BIO_AND_INTERNAL_ONLY);
                         profileBioAndInternalCache.put(new Element(key, op));
                     }
                 }

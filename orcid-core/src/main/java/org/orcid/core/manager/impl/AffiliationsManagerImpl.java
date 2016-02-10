@@ -86,13 +86,6 @@ public class AffiliationsManagerImpl implements AffiliationsManager {
     }
 
     @Override
-    public List<OrgAffiliationRelationEntity> findAffiliationsByType(AffiliationType type) {
-        if (type == null)
-            return null;
-        return affiliationsDao.getByType(type);
-    }
-
-    @Override
     public List<OrgAffiliationRelationEntity> findAffiliationsByUserAndType(String userOrcid, AffiliationType type) {
         if (PojoUtil.isEmpty(userOrcid) || type == null)
             return null;
@@ -348,6 +341,36 @@ public class AffiliationsManagerImpl implements AffiliationsManager {
         return jpaJaxbEducationAdapter.toEducationSummary(educationEntities);
     }
 
+    /**
+     * Get the list of employments that belongs to a user
+     * 
+     * @param userOrcid
+     * @param lastModified
+     *            Last modified date used to check the cache
+     * @return the list of employments that belongs to this user
+     * */
+    @Override
+    @Cacheable(value = "employments", key = "#userOrcid.concat('-').concat(#lastModified)")
+    public List<Employment> getEmploymentList(String userOrcid, long lastModified) {
+        List<OrgAffiliationRelationEntity> employmentEntities = findAffiliationsByUserAndType(userOrcid, AffiliationType.EMPLOYMENT);
+        return jpaJaxbEmploymentAdapter.toEmploymentList(employmentEntities);
+    }
+
+    /**
+     * Get the list of educations that belongs to a user
+     * 
+     * @param userOrcid
+     * @param lastModified
+     *            Last modified date used to check the cache
+     * @return the list of educations that belongs to this user
+     * */
+    @Override
+    @Cacheable(value = "educations", key = "#userOrcid.concat('-').concat(#lastModified)")
+    public List<Education> getEducationList(String userOrcid, long lastModified) {
+        List<OrgAffiliationRelationEntity> educationEntities = findAffiliationsByUserAndType(userOrcid, AffiliationType.EDUCATION);
+        return jpaJaxbEducationAdapter.toEducationList(educationEntities);
+    }
+    
     private Item createItem(OrgAffiliationRelationEntity orgAffiliationEntity) {
         Item item = new Item();
         item.setItemName(orgAffiliationEntity.getOrg().getName());

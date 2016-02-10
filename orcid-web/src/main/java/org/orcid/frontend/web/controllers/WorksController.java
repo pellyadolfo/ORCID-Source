@@ -34,13 +34,12 @@ import org.orcid.core.manager.ProfileEntityManager;
 import org.orcid.core.manager.WorkManager;
 import org.orcid.core.security.visibility.OrcidVisibilityDefaults;
 import org.orcid.frontend.web.util.LanguagesMap;
-import org.orcid.jaxb.model.message.OrcidProfile;
+import org.orcid.jaxb.model.common_rc2.Visibility;
 import org.orcid.jaxb.model.record_rc2.CitationType;
 import org.orcid.jaxb.model.record_rc2.Relationship;
 import org.orcid.jaxb.model.record_rc2.Work;
 import org.orcid.jaxb.model.record_rc2.WorkCategory;
 import org.orcid.jaxb.model.record_rc2.WorkType;
-import org.orcid.jaxb.model.common_rc2.Visibility;
 import org.orcid.persistence.jpa.entities.ProfileEntity;
 import org.orcid.pojo.KeyValue;
 import org.orcid.pojo.ajaxForm.Citation;
@@ -172,8 +171,9 @@ public class WorksController extends BaseWorkspaceController {
 
     private void initializeFields(WorkForm w) {
         if (w.getVisibility() == null) {
-            OrcidProfile profile = getEffectiveProfile();
-            w.setVisibility(profile.getOrcidInternal().getPreferences().getActivitiesVisibilityDefault().getValue());
+            ProfileEntity profile = profileEntityCacheManager.retrieve(getCurrentUserOrcid());
+            org.orcid.jaxb.model.message.Visibility v = org.orcid.jaxb.model.message.Visibility.fromValue(profile.getActivitiesVisibilityDefault() == null ? OrcidVisibilityDefaults.WORKS_DEFAULT.getVisibility().value() : profile.getActivitiesVisibilityDefault().value());
+            w.setVisibility(v);
         }
 
         if (w.getTitle() == null) {
@@ -403,21 +403,20 @@ public class WorksController extends BaseWorkspaceController {
     }
 
     private void addWork(WorkForm workForm) {
-        // Get current profile
-        OrcidProfile currentProfile = getEffectiveProfile();
+        String orcid = getCurrentUserOrcid();
 
         Work newWork = workForm.toWork();
         newWork.setPutCode(null);
 
         // Create work
-        newWork = workManager.createWork(currentProfile.getOrcidIdentifier().getPath(), newWork, false);
+        newWork = workManager.createWork(orcid, newWork, false);
 
         // Set the id in the work to be returned
         Long workId = newWork.getPutCode();
         workForm.setPutCode(Text.valueOf(workId));
 
         // make the new work the default display
-        workManager.updateToMaxDisplay(currentProfile.getOrcidIdentifier().getPath(), workId);
+        workManager.updateToMaxDisplay(orcid, workId);
     }
 
     private void updateWork(WorkForm workForm) throws Exception {

@@ -37,11 +37,6 @@ public interface AffiliationsManager {
     /**
      * 
      * */
-    List<OrgAffiliationRelationEntity> findAffiliationsByType(AffiliationType type);
-    
-    /**
-     * 
-     * */
     List<OrgAffiliationRelationEntity> findAffiliationsByUserAndType(String userOrcid, AffiliationType type);
     
     /**
@@ -145,6 +140,16 @@ public interface AffiliationsManager {
     List<EmploymentSummary> getEmploymentSummaryList(String userOrcid, long lastModified);
     
     /**
+     * Get the list of employments that belongs to a user
+     * 
+     * @param userOrcid
+     * @param lastModified
+     *          Last modified date used to check the cache
+     * @return the list of employments that belongs to this user
+     * */
+    List<Employment> getEmploymentList(String userOrcid, long lastModified);
+    
+    /**
      * Get the list of educations that belongs to a user
      * 
      * @param userOrcid
@@ -153,4 +158,14 @@ public interface AffiliationsManager {
      * @return the list of educations that belongs to this user
      * */
     List<EducationSummary> getEducationSummaryList(String userOrcid, long lastModified);
+    
+    /**
+     * Get the list of educations that belongs to a user
+     * 
+     * @param userOrcid
+     * @param lastModified
+     *          Last modified date used to check the cache
+     * @return the list of educations that belongs to this user
+     * */
+    List<Education> getEducationList(String userOrcid, long lastModified);
 }

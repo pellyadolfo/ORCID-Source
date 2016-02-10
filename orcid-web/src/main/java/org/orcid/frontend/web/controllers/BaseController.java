@@ -58,10 +58,10 @@ import org.orcid.core.oauth.OrcidProfileUserDetails;
 import org.orcid.core.utils.JsonUtils;
 import org.orcid.frontend.web.forms.LoginForm;
 import org.orcid.frontend.web.forms.validate.OrcidUrlValidator;
-import org.orcid.jaxb.model.message.Email;
-import org.orcid.jaxb.model.message.OrcidProfile;
 import org.orcid.jaxb.model.message.SendEmailFrequency;
 import org.orcid.jaxb.model.message.Visibility;
+import org.orcid.jaxb.model.record_rc2.Email;
+import org.orcid.jaxb.model.record_rc2.Emails;
 import org.orcid.persistence.constants.SiteConstants;
 import org.orcid.pojo.ajaxForm.ErrorsInterface;
 import org.orcid.pojo.ajaxForm.PojoUtil;
@@ -374,14 +374,16 @@ public class BaseController {
         if (userDetails == null) {
             return true;
         }
-        OrcidProfile orcidProfile = getEffectiveProfile();
-        if (orcidProfile == null) {
+        String effectiveUserOrcid = getEffectiveUserOrcid();
+        if (effectiveUserOrcid == null) {
             return true;
         }
-        List<Email> emails = orcidProfile.getOrcidBio().getContactDetails().getEmail();
-        for (Email email : emails) {
-            if (decryptedEmail.equalsIgnoreCase(email.getValue())) {
-                return true;
+        Emails emails = emailManager.getEmails(effectiveUserOrcid);
+        if(emails != null && emails.getEmails() != null) {
+            for (Email email : emails.getEmails()) {
+                if (decryptedEmail.equalsIgnoreCase(email.getEmail())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -460,8 +462,8 @@ public class BaseController {
                 bindingResult.addError(new FieldError("email", "email", email, false, codes, args, "Not vaild"));
             }
             if (!(ignoreCurrentUser && emailMatchesCurrentUser(email)) && emailManager.emailExists(email)) {
-                OrcidProfile orcidProfile = orcidProfileManager.retrieveOrcidProfileByEmail(email);
-                if (orcidProfile.getOrcidHistory().isClaimed()) {
+                String effectiveUserOrcid = getEffectiveUserOrcid(); 
+                if (profileEntityManager.isProfileClaimed(effectiveUserOrcid)) {
                     String[] codes = null;
                     if (isRegisterRequest) {
                         codes = new String[] { "orcid.frontend.verify.duplicate_email" };
@@ -524,23 +526,23 @@ public class BaseController {
             return false;
         }
         boolean match = false;
-        for (Email cuEmail : getEffectiveProfile().getOrcidBio().getContactDetails().getEmail()) {
-            if (cuEmail.getValue() != null && cuEmail.getValue().equalsIgnoreCase(email))
-                match = true;
+        
+        String effectiveUserOrcid = getEffectiveUserOrcid();
+        if (effectiveUserOrcid == null) {
+            return true;
         }
+        Emails emails = emailManager.getEmails(effectiveUserOrcid);
+        if(emails != null && emails.getEmails() != null) {
+            for (Email cuEmail : emails.getEmails()) {
+                if(email.equalsIgnoreCase(cuEmail.getEmail())) {
+                    match = true;
+                }                
+            }
+        }                
+        
         return match;
-    }
-
-    public OrcidProfile getEffectiveProfile() {
-        String effectiveOrcid = getEffectiveUserOrcid();
-        return effectiveOrcid == null ? null : orcidProfileManager.retrieveOrcidProfile(effectiveOrcid);
-    }
-
-    public OrcidProfile getRealProfile() {
-        String realOrcid = getRealUserOrcid();
-        return realOrcid == null ? null : orcidProfileManager.retrieveOrcidProfile(realOrcid);
-    }
-
+    }    
+    
     public String getMessage(String messageCode, Object... messageParams) {
         return localeManager.resolveMessage(messageCode, messageParams);
     }
@@ -753,10 +755,11 @@ public class BaseController {
 
     @ModelAttribute("locked")
     public boolean isLocked() {
-        OrcidProfile profile = getEffectiveProfile();
-        if (profile == null)
+        String effectiveOrcid = getEffectiveUserOrcid();
+        if (effectiveOrcid == null) {
             return false;
-        return profile.isLocked();
+        }
+        return profileEntityManager.isLocked(effectiveOrcid);
     }
 
     protected String calculateRedirectUrl(HttpServletRequest request, HttpServletResponse response) {

@@ -27,10 +27,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.orcid.core.adapter.Jaxb2JpaAdapter;
 import org.orcid.core.adapter.Jpa2JaxbAdapter;
+import org.orcid.core.manager.AffiliationsManager;
+import org.orcid.core.manager.ProfileEntityCacheManager;
+import org.orcid.core.manager.ProfileEntityManager;
+import org.orcid.core.security.visibility.OrcidVisibilityDefaults;
 import org.orcid.jaxb.model.message.Affiliation;
 import org.orcid.jaxb.model.message.AffiliationType;
 import org.orcid.jaxb.model.message.Affiliations;
 import org.orcid.jaxb.model.message.OrcidProfile;
+import org.orcid.jaxb.model.record_rc2.Education;
+import org.orcid.jaxb.model.record_rc2.Employment;
 import org.orcid.persistence.dao.OrgAffiliationRelationDao;
 import org.orcid.persistence.dao.OrgDisambiguatedDao;
 import org.orcid.persistence.dao.OrgDisambiguatedSolrDao;
@@ -88,29 +94,22 @@ public class AffiliationsController extends BaseWorkspaceController {
     @Resource
     private OrgDisambiguatedDao orgDisambiguatedDao;
 
+    @Resource
+    private ProfileEntityCacheManager profileEntityCacheManager;
+    
+    @Resource
+    private AffiliationsManager affiliationsManager;
+    
+    @Resource
+    private ProfileEntityManager profileEntityManager;
+    
     /**
      * Removes a affiliation from a profile
      * */
     @RequestMapping(value = "/affiliations.json", method = RequestMethod.DELETE)
     public @ResponseBody
     AffiliationForm removeAffiliationJson(HttpServletRequest request, @RequestBody AffiliationForm affiliation) {
-
-        // Get cached profile
-        OrcidProfile currentProfile = getEffectiveProfile();
-        Affiliations affiliations = currentProfile.getOrcidActivities() == null ? null : currentProfile.getOrcidActivities().getAffiliations();
-        if (affiliations != null) {
-            List<Affiliation> affiliationList = affiliations.getAffiliation();
-            Iterator<Affiliation> affiliationIterator = affiliationList.iterator();
-            while (affiliationIterator.hasNext()) {
-                Affiliation orcidAffiliation = affiliationIterator.next();
-                if (affiliation.getPutCode().getValue().equals(orcidAffiliation.getPutCode())) {
-                    affiliationIterator.remove();
-                }
-            }
-            currentProfile.getOrcidActivities().setAffiliations(affiliations);
-            orgRelationAffiliationDao.removeOrgAffiliationRelation(currentProfile.getOrcidIdentifier().getPath(), Long.valueOf(affiliation.getPutCode().getValue()));
-        }
-
+        orgRelationAffiliationDao.removeOrgAffiliationRelation(getCurrentUserOrcid(), Long.valueOf(affiliation.getPutCode().getValue()));
         return affiliation;
     }
 
@@ -198,8 +197,8 @@ public class AffiliationsController extends BaseWorkspaceController {
     AffiliationForm getAffiliation(HttpServletRequest request) {
         AffiliationForm affiliationForm = new AffiliationForm();
 
-        OrcidProfile profile = getEffectiveProfile();
-        Visibility v = Visibility.valueOf(profile.getOrcidInternal().getPreferences().getActivitiesVisibilityDefault().getValue());
+        ProfileEntity profile = profileEntityCacheManager.retrieve(getCurrentUserOrcid());
+        Visibility v = Visibility.valueOf(profile.getActivitiesVisibilityDefault() == null ? OrcidVisibilityDefaults.FUNDING_DEFAULT.getVisibility() : profile.getActivitiesVisibilityDefault());
         affiliationForm.setVisibility(v);
 
         Text affiliationName = new Text();
@@ -299,8 +298,8 @@ public class AffiliationsController extends BaseWorkspaceController {
         if(PojoUtil.isEmpty(affiliationForm.getPutCode())) {
             throw new IllegalArgumentException(getMessage("web.orcid.affiliation_noputcode.exception", params));
         }
-        OrcidProfile currentProfile = getEffectiveProfile();
-        if (!currentProfile.getOrcidIdentifier().getPath().equals(affiliationForm.getSource()))
+        String orcid = getCurrentUserOrcid();
+        if (orcid == null || !orcid.equals(affiliationForm.getSource()))
             throw new Exception(getMessage("web.orcid.activity_incorrectsource.exception"));
 
         ProfileEntity userProfile = profileDao.find(getEffectiveUserOrcid());
@@ -327,9 +326,13 @@ public class AffiliationsController extends BaseWorkspaceController {
      * 
      */
     private List<String> createAffiliationsIdList(HttpServletRequest request) {
-        OrcidProfile currentProfile = getEffectiveProfile();
-        Affiliations affiliations = currentProfile.getOrcidActivities() == null ? null : currentProfile.getOrcidActivities().getAffiliations();
-
+        String orcid = getCurrentUserOrcid();
+        java.util.Date lastModified = profileEntityManager.getLastModified(getEffectiveUserOrcid());
+        
+        List<Education> educationList = affiliationsManager.getEducationList(orcid, lastModified.getTime());
+        List<Employment> employmentList = affiliationsManager.getEmploymentList(orcid, lastModified.getTime());
+        
+        
         HashMap<String, AffiliationForm> affiliationsMap = new HashMap<>();
         List<String> affiliationIds = new ArrayList<String>();
         if (affiliations != null) {

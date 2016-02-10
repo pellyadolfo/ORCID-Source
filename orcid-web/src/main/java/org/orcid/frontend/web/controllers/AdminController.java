@@ -394,8 +394,8 @@ public class AdminController extends BaseController {
         String password = form.getPassword();
         String orcid = null;
         if (StringUtils.isNotBlank(password) && password.matches(OrcidPasswordConstants.ORCID_PASSWORD_REGEX)) {
-            OrcidProfile currentProfile = getEffectiveProfile();
-            if (OrcidType.ADMIN.equals(currentProfile.getType())) {
+            ProfileEntity profile = profileEntityCacheManager.retrieve(getCurrentUserOrcid());
+            if (OrcidType.ADMIN.equals(profile.getOrcidType())) {
                 if (StringUtils.isNotBlank(orcidOrEmail))
                     orcidOrEmail = orcidOrEmail.trim();
                 boolean isOrcid = matchesOrcidPattern(orcidOrEmail);
@@ -444,9 +444,8 @@ public class AdminController extends BaseController {
         }
 
         if (StringUtils.isNotEmpty(orcid)) {
-            OrcidProfile currentProfile = getEffectiveProfile();
-            // Only allow and admin
-            if (OrcidType.ADMIN.equals(currentProfile.getType())) {
+            ProfileEntity profile = profileEntityCacheManager.retrieve(getCurrentUserOrcid());
+            if (OrcidType.ADMIN.equals(profile.getOrcidType())) {
                 String result = adminManager.removeSecurityQuestion(orcid);
                 // If the resulting string is not null, it means there was an
                 // error

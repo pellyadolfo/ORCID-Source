@@ -36,7 +36,7 @@ public interface JpaJaxbEducationAdapter {
     
     EducationSummary toEducationSummary(OrgAffiliationRelationEntity entity);
 
-    List<Education> toEducation(Collection<OrgAffiliationRelationEntity> entities);
+    List<Education> toEducationList(Collection<OrgAffiliationRelationEntity> entities);
     
     List<EducationSummary> toEducationSummary(Collection<OrgAffiliationRelationEntity> entities);
     

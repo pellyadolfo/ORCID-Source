@@ -36,7 +36,7 @@ public interface JpaJaxbEmploymentAdapter {
     
     EmploymentSummary toEmploymentSummary(OrgAffiliationRelationEntity entity);
 
-    List<Employment> toEmployment(Collection<OrgAffiliationRelationEntity> entities);
+    List<Employment> toEmploymentList(Collection<OrgAffiliationRelationEntity> entities);
     
     List<EmploymentSummary> toEmploymentSummary(Collection<OrgAffiliationRelationEntity> entities);
     

@@ -181,11 +181,23 @@
 		<persistence strategy="localTempSwap" />
 	</cache>
 	
+	<cache name="educations" maxElementsInMemory="2000" timeToLiveSeconds="86400"
+		maxElementsOnDisk="50000" copyOnRead="false" copyOnWrite="false"
+		eternal="false">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
 	<cache name="employments-summaries" maxElementsInMemory="2000" timeToLiveSeconds="86400"
 		maxElementsOnDisk="50000" copyOnRead="false" copyOnWrite="false"
 		eternal="false">
 		<persistence strategy="localTempSwap" />
 	</cache>		
+	
+	<cache name="employments" maxElementsInMemory="2000" timeToLiveSeconds="86400"
+		maxElementsOnDisk="50000" copyOnRead="false" copyOnWrite="false"
+		eternal="false">
+		<persistence strategy="localTempSwap" />
+	</cache>
 	
 	<cache name="fundings-summaries" maxElementsInMemory="2000" timeToLiveSeconds="86400"
 		maxElementsOnDisk="50000" copyOnRead="false" copyOnWrite="false"
