@@ -27,6 +27,7 @@ import org.orcid.jaxb.model.message.Iso3166Country;
 import org.orcid.jaxb.model.message.Organization;
 import org.orcid.jaxb.model.message.OrganizationAddress;
 import org.orcid.jaxb.model.message.Source;
+import org.orcid.jaxb.model.record_rc2.Education;
 
 public class AffiliationForm implements ErrorsInterface, Serializable {
 
@@ -188,6 +189,14 @@ public class AffiliationForm implements ErrorsInterface, Serializable {
         this.sourceName = sourceName;
     }
 
+    public static AffiliationForm valueOf(Education education) {
+        
+    }
+    
+    public static AffiliationForm valueOf(Employment employment) {
+        
+    }
+    
     public static AffiliationForm valueOf(Affiliation affiliation) {
         AffiliationForm form = new AffiliationForm();
 

@@ -330,8 +330,7 @@ public class AffiliationsController extends BaseWorkspaceController {
         java.util.Date lastModified = profileEntityManager.getLastModified(getEffectiveUserOrcid());
         
         List<Education> educationList = affiliationsManager.getEducationList(orcid, lastModified.getTime());
-        List<Employment> employmentList = affiliationsManager.getEmploymentList(orcid, lastModified.getTime());
-        
+        List<Employment> employmentList = affiliationsManager.getEmploymentList(orcid, lastModified.getTime());        
         
         HashMap<String, AffiliationForm> affiliationsMap = new HashMap<>();
         List<String> affiliationIds = new ArrayList<String>();
